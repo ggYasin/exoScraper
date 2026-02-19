@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laptop Price-to-Performance Analysis</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0f172a; color: #e2e8f0; line-height: 1.6;
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+        .header {
+            background: linear-gradient(135deg, #1e1b4b 0%, #1e3a5f 100%);
+            border-radius: 16px; padding: 40px; margin-bottom: 32px;
+            border: 1px solid #334155;
+        }
+        .header h1 {
+            font-size: 28px; font-weight: 700;
+            background: linear-gradient(90deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .header p { color: #94a3b8; font-size: 14px; }
+        .stats {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px; margin-bottom: 32px;
+        }
+        .stat-card {
+            background: #1e293b; border-radius: 12px; padding: 20px;
+            border: 1px solid #334155;
+        }
+        .stat-card .label { color: #64748b; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-card .value { font-size: 24px; font-weight: 700; color: #f1f5f9; margin-top: 4px; }
+        .section {
+            background: #0f172a; border: 1px solid #1e293b;
+            border-radius: 12px; margin-bottom: 32px; overflow: hidden;
+        }
+        .section-title {
+            padding: 20px 24px; font-size: 18px; font-weight: 600;
+            border-bottom: 1px solid #1e293b;
+            background: linear-gradient(90deg, rgba(99,102,241,0.1), transparent);
+        }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        td { white-space: nowrap; }
+        tr:hover { background: #334155 !important; }
+        .methodology {
+            background: #1e293b; border-radius: 12px; padding: 24px;
+            border: 1px solid #334155; margin-bottom: 32px; font-size: 14px;
+        }
+        .methodology h3 { color: #a78bfa; margin-bottom: 12px; }
+        .methodology table { font-size: 13px; }
+        .methodology td, .methodology th { padding: 8px 12px; border-bottom: 1px solid #334155; }
+        .bar-chart { margin: 20px 24px; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="header">
+        <h1>📊 Laptop Price-to-Performance Analysis</h1>
+        <p>840 laptops analyzed &bull; 779 with valid prices &bull;
+           Generated 2026-02-19 22:00</p>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <div class="label">Total Laptops</div>
+            <div class="value">840</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Avg Performance</div>
+            <div class="value">63.1</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Price Range</div>
+            <div class="value" style="font-size:18px">50.4M – 1,300.0M</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Best P/P Ratio</div>
+            <div class="value" style="color:#22c55e">0.502</div>
+        </div>
+    </div>
+
+    <div class="methodology">
+        <h3>📐 Scoring Methodology</h3>
+        <table>
+            <tr><th style="padding:10px 12px;text-align:left;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">Component</th><th style="padding:10px 12px;text-align:center;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">Weight</th><th style="padding:10px 12px;text-align:left;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">Approach</th></tr>
+            <tr><td style="padding:8px 12px;color:#60a5fa">CPU</td><td style="padding:8px 12px;text-align:center">30%</td><td style="padding:8px 12px">Tiered by model family + core count & frequency boost</td></tr>
+            <tr><td style="padding:8px 12px;color:#a78bfa">GPU</td><td style="padding:8px 12px;text-align:center">30%</td><td style="padding:8px 12px">Tiered by model + VRAM boost</td></tr>
+            <tr><td style="padding:8px 12px;color:#34d399">RAM</td><td style="padding:8px 12px;text-align:center">15%</td><td style="padding:8px 12px">Log-scaled capacity + DDR5 bonus</td></tr>
+            <tr><td style="padding:8px 12px;color:#fbbf24">Storage</td><td style="padding:8px 12px;text-align:center">10%</td><td style="padding:8px 12px">Log-scaled SSD capacity</td></tr>
+            <tr><td style="padding:8px 12px;color:#f472b6">Display</td><td style="padding:8px 12px;text-align:center">15%</td><td style="padding:8px 12px">Panel type + resolution + refresh rate</td></tr>
+        </table>
+        <p style="margin-top:12px;color:#64748b">Price/Performance (P/P) = Performance Score ÷ Price in Millions of Rials. Higher = better value.</p>
+    </div>
+
+    <div class="section">
+        <div class="section-title">📈 Score Distribution</div>
+        <div class="bar-chart"><div style="display:flex;align-items:flex-end;gap:4px;height:120px;margin:20px 0"><div style="display:flex;flex-direction:column;align-items:center;flex:1"><span style="font-size:11px;color:#94a3b8">0</span><div style="width:100%;height:0px;background:linear-gradient(180deg,#6366f1,#3b82f6);border-radius:4px 4px 0 0;min-height:2px"></div><span style="font-size:10px;color:#64748b;margin-top:4px">0-9</span></div><div style="display:flex;flex-direction:column;align-items:center;flex:1"><span style="font-size:11px;color:#94a3b8">0</span><div style="width:100%;height:0px;background:linear-gradient(180deg,#6366f1,#3b82f6);border-radius:4px 4px 0 0;min-height:2px"></div><span style="font-size:10px;color:#64748b;margin-top:4px">10-19</span></div><div style="display:flex;flex-direction:column;align-items:center;flex:1"><span style="font-size:11px;color:#94a3b8">31</span><div style="width:100%;height:14px;background:linear-gradient(180deg,#6366f1,#3b82f6);border-radius:4px 4px 0 0;min-height:2px"></div><span style="font-size:10px;color:#64748b;margin-top:4px">20-29</span></div><div style="display:flex;flex-direction:column;align-items:center;flex:1"><span style="font-size:11px;color:#94a3b8">70</span><div style="width:100%;height:32px;background:linear-gradient(180deg,#6366f1,#3b82f6);border-radius:4px 4px 0 0;min-height:2px"></div><span style="font-size:10px;color:#64748b;margin-top:4px">30-39</span></div><div style="display:flex;flex-direction:column;align-items:center;flex:1"><span style="font-size:11px;color:#94a3b8">84</span><div style="width:100%;height:38px;background:linear-gradient(180deg,#6366f1,#3b82f6);border-radius:4px 4px 0 0;min-height:2px"></div><span style="font-size:10px;color:#64748b;margin-top:4px">40-49</span></div><div style="display:flex;flex-direction:column;align-items:center;flex:1"><span style="font-size:11px;color:#94a3b8">115</span><div style="width:100%;height:52px;background:linear-gradient(180deg,#6366f1,#3b82f6);border-radius:4px 4px 0 0;min-height:2px"></div><span style="font-size:10px;color:#64748b;margin-top:4px">50-59</span></div><div style="display:flex;flex-direction:column;align-items:center;flex:1"><span style="font-size:11px;color:#94a3b8">218</span><div style="width:100%;height:100px;background:linear-gradient(180deg,#6366f1,#3b82f6);border-radius:4px 4px 0 0;min-height:2px"></div><span style="font-size:10px;color:#64748b;margin-top:4px">60-69</span></div><div style="display:flex;flex-direction:column;align-items:center;flex:1"><span style="font-size:11px;color:#94a3b8">182</span><div style="width:100%;height:83px;background:linear-gradient(180deg,#6366f1,#3b82f6);border-radius:4px 4px 0 0;min-height:2px"></div><span style="font-size:10px;color:#64748b;margin-top:4px">70-79</span></div><div style="display:flex;flex-direction:column;align-items:center;flex:1"><span style="font-size:11px;color:#94a3b8">125</span><div style="width:100%;height:57px;background:linear-gradient(180deg,#6366f1,#3b82f6);border-radius:4px 4px 0 0;min-height:2px"></div><span style="font-size:10px;color:#64748b;margin-top:4px">80-89</span></div><div style="display:flex;flex-direction:column;align-items:center;flex:1"><span style="font-size:11px;color:#94a3b8">15</span><div style="width:100%;height:6px;background:linear-gradient(180deg,#6366f1,#3b82f6);border-radius:4px 4px 0 0;min-height:2px"></div><span style="font-size:10px;color:#64748b;margin-top:4px">90-99</span></div></div></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🏆 Top 25 – Highest Performance</div>
+        <table>
+            <thead><tr>
+                <th style="padding:10px 12px;text-align:left;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">#</th><th style="padding:10px 12px;text-align:left;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">Model</th><th style="padding:10px 12px;text-align:left;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">CPU</th>
+                <th style="padding:10px 12px;text-align:left;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">GPU</th><th style="padding:10px 12px;text-align:right;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">RAM</th><th style="padding:10px 12px;text-align:right;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">SSD</th>
+                <th style="padding:10px 12px;text-align:left;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">Performance</th><th style="padding:10px 12px;text-align:right;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">Price</th>
+            </tr></thead>
+            <tbody><tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">1</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-mc</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5090</td>
+                <td style="padding:8px 12px;text-align:right">192GB</td>
+                <td style="padding:8px 12px;text-align:right">8192GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:191px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">95.7</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,231.8M</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">2</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-mb</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5090</td>
+                <td style="padding:8px 12px;text-align:right">192GB</td>
+                <td style="padding:8px 12px;text-align:right">6144GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:190px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">95.0</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,221.1M</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">3</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-ma</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5090</td>
+                <td style="padding:8px 12px;text-align:right">192GB</td>
+                <td style="padding:8px 12px;text-align:right">4096GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:188px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">94.0</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,210.4M</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">4</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-mh</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5090</td>
+                <td style="padding:8px 12px;text-align:right">192GB</td>
+                <td style="padding:8px 12px;text-align:right">3072GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:186px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">93.3</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,199.7M</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">5</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-mg</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5090</td>
+                <td style="padding:8px 12px;text-align:right">192GB</td>
+                <td style="padding:8px 12px;text-align:right">2048GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:184px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">92.3</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,189.0M</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">6</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-ca</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5080</td>
+                <td style="padding:8px 12px;text-align:right">192GB</td>
+                <td style="padding:8px 12px;text-align:right">8192GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:184px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">92.2</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,210.4M</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">7</td>
+                <td style="padding:8px 12px;font-weight:500">legion-pro-7-2025-16iax10h-KA</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5090</td>
+                <td style="padding:8px 12px;text-align:right">64GB</td>
+                <td style="padding:8px 12px;text-align:right">3072GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:183px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">91.9</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">861.1M</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">8</td>
+                <td style="padding:8px 12px;font-weight:500">legion-pro-7-2025-16iax10-CD</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5090</td>
+                <td style="padding:8px 12px;text-align:right">64GB</td>
+                <td style="padding:8px 12px;text-align:right">3072GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:183px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">91.9</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">861.1M</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">9</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-mf</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5090</td>
+                <td style="padding:8px 12px;text-align:right">64GB</td>
+                <td style="padding:8px 12px;text-align:right">8192GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:183px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">91.8</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,210.4M</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">10</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-ce</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5080</td>
+                <td style="padding:8px 12px;text-align:right">192GB</td>
+                <td style="padding:8px 12px;text-align:right">6144GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:183px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">91.5</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,199.7M</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">11</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-me</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5090</td>
+                <td style="padding:8px 12px;text-align:right">64GB</td>
+                <td style="padding:8px 12px;text-align:right">6144GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:182px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">91.2</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,199.7M</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">12</td>
+                <td style="padding:8px 12px;font-weight:500">legion-pro-7-2025-16iax10h-KE</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5090</td>
+                <td style="padding:8px 12px;text-align:right">64GB</td>
+                <td style="padding:8px 12px;text-align:right">2048GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:181px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">90.9</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">826.6M</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">13</td>
+                <td style="padding:8px 12px;font-weight:500">legion-pro-7-2025-16iax10-CC</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5090</td>
+                <td style="padding:8px 12px;text-align:right">64GB</td>
+                <td style="padding:8px 12px;text-align:right">2048GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:181px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">90.9</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">826.6M</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">14</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-cd</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5080</td>
+                <td style="padding:8px 12px;text-align:right">192GB</td>
+                <td style="padding:8px 12px;text-align:right">4096GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:181px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">90.5</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,189.0M</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">15</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-mM</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5090</td>
+                <td style="padding:8px 12px;text-align:right">64GB</td>
+                <td style="padding:8px 12px;text-align:right">4096GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:180px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">90.2</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,167.6M</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">16</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-cc</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5080</td>
+                <td style="padding:8px 12px;text-align:right">192GB</td>
+                <td style="padding:8px 12px;text-align:right">3072GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:179px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">89.8</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,178.3M</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">17</td>
+                <td style="padding:8px 12px;font-weight:500">legion-pro-7-2025-16iax10h-KC</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5090</td>
+                <td style="padding:8px 12px;text-align:right">32GB</td>
+                <td style="padding:8px 12px;text-align:right">3072GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:179px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">89.5</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">838.1M</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">18</td>
+                <td style="padding:8px 12px;font-weight:500">legion-pro-7-2025-16iax10-CA</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5090</td>
+                <td style="padding:8px 12px;text-align:right">32GB</td>
+                <td style="padding:8px 12px;text-align:right">3072GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:179px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">89.5</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">838.1M</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">19</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-mL</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5090</td>
+                <td style="padding:8px 12px;text-align:right">64GB</td>
+                <td style="padding:8px 12px;text-align:right">3072GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:179px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">89.5</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,156.9M</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">20</td>
+                <td style="padding:8px 12px;font-weight:500">legion-pro-7-2025-16iax10h-KD</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5090</td>
+                <td style="padding:8px 12px;text-align:right">64GB</td>
+                <td style="padding:8px 12px;text-align:right">1024GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:178px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">89.2</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">792.2M</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">21</td>
+                <td style="padding:8px 12px;font-weight:500">legion-pro-7-2025-16iax10-CB</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5090</td>
+                <td style="padding:8px 12px;text-align:right">64GB</td>
+                <td style="padding:8px 12px;text-align:right">1024GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:178px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">89.2</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">792.2M</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">22</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-cb</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5080</td>
+                <td style="padding:8px 12px;text-align:right">192GB</td>
+                <td style="padding:8px 12px;text-align:right">2048GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:177px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">88.8</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,167.6M</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">23</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-mj</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5090</td>
+                <td style="padding:8px 12px;text-align:right">32GB</td>
+                <td style="padding:8px 12px;text-align:right">6144GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:177px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">88.7</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,178.3M</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">24</td>
+                <td style="padding:8px 12px;font-weight:500">legion-pro-7-2025-16iax10h-KB</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5090</td>
+                <td style="padding:8px 12px;text-align:right">32GB</td>
+                <td style="padding:8px 12px;text-align:right">2048GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:177px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">88.5</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">803.7M</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">25</td>
+                <td style="padding:8px 12px;font-weight:500">legion-pro-7-2025-16iax10-CF</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5090</td>
+                <td style="padding:8px 12px;text-align:right">32GB</td>
+                <td style="padding:8px 12px;text-align:right">2048GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:177px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">88.5</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">803.7M</td></tr>
+</tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🔍 Top 25 – Sub-Score Breakdown</div>
+        <table>
+            <thead><tr>
+                <th style="padding:10px 12px;text-align:left;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">#</th><th style="padding:10px 12px;text-align:left;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">Model</th>
+                <th style="padding:10px 12px;text-align:center;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">CPU</th><th style="padding:10px 12px;text-align:center;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">GPU</th><th style="padding:10px 12px;text-align:center;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">RAM</th>
+                <th style="padding:10px 12px;text-align:center;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">Storage</th><th style="padding:10px 12px;text-align:center;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">Display</th><th style="padding:10px 12px;text-align:center;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">Total</th>
+            </tr></thead>
+            <tbody><tr style="background:#0f172a">
+                <td style="padding:6px 10px;color:#94a3b8">1</td>
+                <td style="padding:6px 10px;font-weight:500">legion-9-18iax10-mc</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">98.0</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">100</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">100</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">84.0</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">95.7</td>
+            </tr>
+<tr style="background:#1e293b">
+                <td style="padding:6px 10px;color:#94a3b8">2</td>
+                <td style="padding:6px 10px;font-weight:500">legion-9-18iax10-mb</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">98.0</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">100</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">93.1</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">84.0</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">95.0</td>
+            </tr>
+<tr style="background:#0f172a">
+                <td style="padding:6px 10px;color:#94a3b8">3</td>
+                <td style="padding:6px 10px;font-weight:500">legion-9-18iax10-ma</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">98.0</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">100</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">83.3</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">84.0</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">94.0</td>
+            </tr>
+<tr style="background:#1e293b">
+                <td style="padding:6px 10px;color:#94a3b8">4</td>
+                <td style="padding:6px 10px;font-weight:500">legion-9-18iax10-mh</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">98.0</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">100</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">76.4</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">84.0</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">93.3</td>
+            </tr>
+<tr style="background:#0f172a">
+                <td style="padding:6px 10px;color:#94a3b8">5</td>
+                <td style="padding:6px 10px;font-weight:500">legion-9-18iax10-mg</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">98.0</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">100</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">66.7</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">84.0</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">92.3</td>
+            </tr>
+<tr style="background:#1e293b">
+                <td style="padding:6px 10px;color:#94a3b8">6</td>
+                <td style="padding:6px 10px;font-weight:500">legion-9-18iax10-ca</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">86.3</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">100</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">100</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">84.0</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">92.2</td>
+            </tr>
+<tr style="background:#0f172a">
+                <td style="padding:6px 10px;color:#94a3b8">7</td>
+                <td style="padding:6px 10px;font-weight:500">legion-pro-7-2025-16iax10h-KA</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">98.0</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">74.5</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">76.4</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">100</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">91.9</td>
+            </tr>
+<tr style="background:#1e293b">
+                <td style="padding:6px 10px;color:#94a3b8">8</td>
+                <td style="padding:6px 10px;font-weight:500">legion-pro-7-2025-16iax10-CD</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">98.0</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">74.5</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">76.4</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">100</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">91.9</td>
+            </tr>
+<tr style="background:#0f172a">
+                <td style="padding:6px 10px;color:#94a3b8">9</td>
+                <td style="padding:6px 10px;font-weight:500">legion-9-18iax10-mf</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">98.0</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">74.5</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">100</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">84.0</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">91.8</td>
+            </tr>
+<tr style="background:#1e293b">
+                <td style="padding:6px 10px;color:#94a3b8">10</td>
+                <td style="padding:6px 10px;font-weight:500">legion-9-18iax10-ce</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">86.3</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">100</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">93.1</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">84.0</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">91.5</td>
+            </tr>
+<tr style="background:#0f172a">
+                <td style="padding:6px 10px;color:#94a3b8">11</td>
+                <td style="padding:6px 10px;font-weight:500">legion-9-18iax10-me</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">98.0</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">74.5</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">93.1</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">84.0</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">91.2</td>
+            </tr>
+<tr style="background:#1e293b">
+                <td style="padding:6px 10px;color:#94a3b8">12</td>
+                <td style="padding:6px 10px;font-weight:500">legion-pro-7-2025-16iax10h-KE</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">98.0</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">74.5</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">66.7</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">100</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">90.9</td>
+            </tr>
+<tr style="background:#0f172a">
+                <td style="padding:6px 10px;color:#94a3b8">13</td>
+                <td style="padding:6px 10px;font-weight:500">legion-pro-7-2025-16iax10-CC</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">98.0</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">74.5</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">66.7</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">100</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">90.9</td>
+            </tr>
+<tr style="background:#1e293b">
+                <td style="padding:6px 10px;color:#94a3b8">14</td>
+                <td style="padding:6px 10px;font-weight:500">legion-9-18iax10-cd</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">86.3</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">100</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">83.3</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">84.0</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">90.5</td>
+            </tr>
+<tr style="background:#0f172a">
+                <td style="padding:6px 10px;color:#94a3b8">15</td>
+                <td style="padding:6px 10px;font-weight:500">legion-9-18iax10-mM</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">98.0</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">74.5</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">83.3</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">84.0</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">90.2</td>
+            </tr>
+<tr style="background:#1e293b">
+                <td style="padding:6px 10px;color:#94a3b8">16</td>
+                <td style="padding:6px 10px;font-weight:500">legion-9-18iax10-cc</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">86.3</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">100</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">76.4</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">84.0</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">89.8</td>
+            </tr>
+<tr style="background:#0f172a">
+                <td style="padding:6px 10px;color:#94a3b8">17</td>
+                <td style="padding:6px 10px;font-weight:500">legion-pro-7-2025-16iax10h-KC</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">98.0</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">58.3</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">76.4</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">100</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">89.5</td>
+            </tr>
+<tr style="background:#1e293b">
+                <td style="padding:6px 10px;color:#94a3b8">18</td>
+                <td style="padding:6px 10px;font-weight:500">legion-pro-7-2025-16iax10-CA</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">98.0</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">58.3</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">76.4</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">100</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">89.5</td>
+            </tr>
+<tr style="background:#0f172a">
+                <td style="padding:6px 10px;color:#94a3b8">19</td>
+                <td style="padding:6px 10px;font-weight:500">legion-9-18iax10-mL</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">98.0</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">74.5</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">76.4</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">84.0</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">89.5</td>
+            </tr>
+<tr style="background:#1e293b">
+                <td style="padding:6px 10px;color:#94a3b8">20</td>
+                <td style="padding:6px 10px;font-weight:500">legion-pro-7-2025-16iax10h-KD</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">98.0</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">74.5</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">50.0</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">100</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">89.2</td>
+            </tr>
+<tr style="background:#0f172a">
+                <td style="padding:6px 10px;color:#94a3b8">21</td>
+                <td style="padding:6px 10px;font-weight:500">legion-pro-7-2025-16iax10-CB</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">98.0</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">74.5</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">50.0</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">100</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">89.2</td>
+            </tr>
+<tr style="background:#1e293b">
+                <td style="padding:6px 10px;color:#94a3b8">22</td>
+                <td style="padding:6px 10px;font-weight:500">legion-9-18iax10-cb</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">86.3</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">100</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">66.7</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">84.0</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">88.8</td>
+            </tr>
+<tr style="background:#0f172a">
+                <td style="padding:6px 10px;color:#94a3b8">23</td>
+                <td style="padding:6px 10px;font-weight:500">legion-9-18iax10-mj</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">98.0</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">58.3</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">93.1</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">84.0</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">88.7</td>
+            </tr>
+<tr style="background:#1e293b">
+                <td style="padding:6px 10px;color:#94a3b8">24</td>
+                <td style="padding:6px 10px;font-weight:500">legion-pro-7-2025-16iax10h-KB</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">98.0</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">58.3</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">66.7</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">100</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">88.5</td>
+            </tr>
+<tr style="background:#0f172a">
+                <td style="padding:6px 10px;color:#94a3b8">25</td>
+                <td style="padding:6px 10px;font-weight:500">legion-pro-7-2025-16iax10-CF</td>
+                <td style="padding:6px 10px;text-align:center;color:#60a5fa">95.6</td>
+                <td style="padding:6px 10px;text-align:center;color:#a78bfa">98.0</td>
+                <td style="padding:6px 10px;text-align:center;color:#34d399">58.3</td>
+                <td style="padding:6px 10px;text-align:center;color:#fbbf24">66.7</td>
+                <td style="padding:6px 10px;text-align:center;color:#f472b6">100</td>
+                <td style="padding:6px 10px;text-align:center;font-weight:700;color:#e2e8f0">88.5</td>
+            </tr>
+</tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <div class="section-title">💰 Top 25 – Best Price/Performance (Best Value)</div>
+        <table>
+            <thead><tr>
+                <th style="padding:10px 12px;text-align:left;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">#</th><th style="padding:10px 12px;text-align:left;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">Model</th><th style="padding:10px 12px;text-align:left;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">CPU</th>
+                <th style="padding:10px 12px;text-align:left;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">GPU</th><th style="padding:10px 12px;text-align:right;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">RAM</th><th style="padding:10px 12px;text-align:right;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">SSD</th>
+                <th style="padding:10px 12px;text-align:left;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">Performance</th><th style="padding:10px 12px;text-align:right;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">Price</th><th style="padding:10px 12px;text-align:right;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">P/P Ratio</th>
+            </tr></thead>
+            <tbody><tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">1</td>
+                <td style="padding:8px 12px;font-weight:500">IdeaPad-Slim-3-2023-15ABR8-Z</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 7 7730U</td>
+                <td style="padding:8px 12px;color:#a78bfa">Radeon Vega 8</td>
+                <td style="padding:8px 12px;text-align:right">8GB</td>
+                <td style="padding:8px 12px;text-align:right">512GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:68px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">34.4</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">68.6M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.502</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">2</td>
+                <td style="padding:8px 12px;font-weight:500">IdeaPad-Slim-3-2023-15ABR8-ZA</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 7 7730U</td>
+                <td style="padding:8px 12px;color:#a78bfa">Radeon Vega 8</td>
+                <td style="padding:8px 12px;text-align:right">8GB</td>
+                <td style="padding:8px 12px;text-align:right">256GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:65px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">32.8</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">66.5M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.492</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">3</td>
+                <td style="padding:8px 12px;font-weight:500">Vivobook-16-2023-M1605YA-ZD-Indie-Black</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 7 7730U</td>
+                <td style="padding:8px 12px;color:#a78bfa">Radeon Vega 8</td>
+                <td style="padding:8px 12px;text-align:right">16GB</td>
+                <td style="padding:8px 12px;text-align:right">512GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:77px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">38.7</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">79.0M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.490</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">4</td>
+                <td style="padding:8px 12px;font-weight:500">Vivobook-Go-15-OLED-E1504FA-C-Green-Grey</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 5 7520U</td>
+                <td style="padding:8px 12px;color:#a78bfa">Radeon 610M</td>
+                <td style="padding:8px 12px;text-align:right">8GB</td>
+                <td style="padding:8px 12px;text-align:right">512GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:58px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">29.3</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">59.8M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.489</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">5</td>
+                <td style="padding:8px 12px;font-weight:500">Vivobook-16-2023-M1605YA-ZD-Cool-Silver</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 7 7730U</td>
+                <td style="padding:8px 12px;color:#a78bfa">Radeon Vega 8</td>
+                <td style="padding:8px 12px;text-align:right">16GB</td>
+                <td style="padding:8px 12px;text-align:right">512GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:77px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">38.7</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">82.1M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.472</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">6</td>
+                <td style="padding:8px 12px;font-weight:500">IdeaPad-Slim-3-2023-15ABR8-ZB</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 7 7730U</td>
+                <td style="padding:8px 12px;color:#a78bfa">Radeon Vega 8</td>
+                <td style="padding:8px 12px;text-align:right">8GB</td>
+                <td style="padding:8px 12px;text-align:right">1024GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:72px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">36.1</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">78.0M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.463</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">7</td>
+                <td style="padding:8px 12px;font-weight:500">Vivobook-16-2023-M1605YA-ZA-Cool-Silver</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 7 7730U</td>
+                <td style="padding:8px 12px;color:#a78bfa">Radeon Vega 8</td>
+                <td style="padding:8px 12px;text-align:right">8GB</td>
+                <td style="padding:8px 12px;text-align:right">512GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:72px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">36.3</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">79.0M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.460</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">8</td>
+                <td style="padding:8px 12px;font-weight:500">Vivobook-16-2023-M1605YA-ZA-Indie-Black</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 7 7730U</td>
+                <td style="padding:8px 12px;color:#a78bfa">Radeon Vega 8</td>
+                <td style="padding:8px 12px;text-align:right">8GB</td>
+                <td style="padding:8px 12px;text-align:right">512GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:72px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">36.3</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">79.0M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.460</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">9</td>
+                <td style="padding:8px 12px;font-weight:500">IdeaPad-1-Z-Cloud-Grey</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 5 7520U</td>
+                <td style="padding:8px 12px;color:#a78bfa">Radeon 610M</td>
+                <td style="padding:8px 12px;text-align:right">8GB</td>
+                <td style="padding:8px 12px;text-align:right">256GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:47px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">23.7</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">52.0M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.456</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">10</td>
+                <td style="padding:8px 12px;font-weight:500">Vivobook-16-2023-M1605YA-ZE-Indie-Black</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 7 7730U</td>
+                <td style="padding:8px 12px;color:#a78bfa">Radeon Vega 8</td>
+                <td style="padding:8px 12px;text-align:right">16GB</td>
+                <td style="padding:8px 12px;text-align:right">1024GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#f59e0b;width:80px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">40.4</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">90.5M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.447</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">11</td>
+                <td style="padding:8px 12px;font-weight:500">IdeaPad-1-ZA-Cloud-Grey</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 5 7520U</td>
+                <td style="padding:8px 12px;color:#a78bfa">Radeon 610M</td>
+                <td style="padding:8px 12px;text-align:right">8GB</td>
+                <td style="padding:8px 12px;text-align:right">512GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:50px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">25.4</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">58.2M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.436</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">12</td>
+                <td style="padding:8px 12px;font-weight:500">IdeaPad-Slim-3-2023-15AMN8-C</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 3 7320U</td>
+                <td style="padding:8px 12px;color:#a78bfa">Radeon 610M</td>
+                <td style="padding:8px 12px;text-align:right">8GB</td>
+                <td style="padding:8px 12px;text-align:right">256GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:43px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">21.9</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">50.4M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.434</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">13</td>
+                <td style="padding:8px 12px;font-weight:500">Vivobook-16-2023-M1605YA-ZE-Cool-Silver</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 7 7730U</td>
+                <td style="padding:8px 12px;color:#a78bfa">Radeon Vega 8</td>
+                <td style="padding:8px 12px;text-align:right">16GB</td>
+                <td style="padding:8px 12px;text-align:right">1024GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#f59e0b;width:80px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">40.4</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">93.6M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.432</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">14</td>
+                <td style="padding:8px 12px;font-weight:500">IdeaPad-Slim-3-2023-15IRU8-Z</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core i3 1305U</td>
+                <td style="padding:8px 12px;color:#a78bfa">Intel UHD</td>
+                <td style="padding:8px 12px;text-align:right">8GB</td>
+                <td style="padding:8px 12px;text-align:right">256GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:44px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">22.3</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">53.0M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.421</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">15</td>
+                <td style="padding:8px 12px;font-weight:500">ideapad-slim-3-2025-15irh10-nG</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core i7 13620H</td>
+                <td style="padding:8px 12px;color:#a78bfa">Intel UHD</td>
+                <td style="padding:8px 12px;text-align:right">16GB</td>
+                <td style="padding:8px 12px;text-align:right">512GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#f59e0b;width:80px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">40.1</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">95.7M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.419</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">16</td>
+                <td style="padding:8px 12px;font-weight:500">IdeaPad-1-ZB-Cloud-Grey</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 5 7520U</td>
+                <td style="padding:8px 12px;color:#a78bfa">Radeon 610M</td>
+                <td style="padding:8px 12px;text-align:right">8GB</td>
+                <td style="padding:8px 12px;text-align:right">1024GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:54px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">27.0</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">64.5M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.419</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">17</td>
+                <td style="padding:8px 12px;font-weight:500">Vivobook-Go-15-E1504FA-C-Mixed-Black</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 5 7520U</td>
+                <td style="padding:8px 12px;color:#a78bfa">Radeon 610M</td>
+                <td style="padding:8px 12px;text-align:right">8GB</td>
+                <td style="padding:8px 12px;text-align:right">512GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:50px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">25.1</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">59.8M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.419</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">18</td>
+                <td style="padding:8px 12px;font-weight:500">IdeaPad-Slim-3-2023-15IRU8-ZA</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core i3 1305U</td>
+                <td style="padding:8px 12px;color:#a78bfa">Intel UHD</td>
+                <td style="padding:8px 12px;text-align:right">8GB</td>
+                <td style="padding:8px 12px;text-align:right">512GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:48px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">24.0</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">57.2M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.419</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">19</td>
+                <td style="padding:8px 12px;font-weight:500">IdeaPad-Slim-3-2023-15AMN8-CA</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 3 7320U</td>
+                <td style="padding:8px 12px;color:#a78bfa">Radeon 610M</td>
+                <td style="padding:8px 12px;text-align:right">8GB</td>
+                <td style="padding:8px 12px;text-align:right">512GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:47px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">23.6</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">56.6M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.416</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">20</td>
+                <td style="padding:8px 12px;font-weight:500">ideapad-slim-3-2025-15irh10-nH</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core i7 13620H</td>
+                <td style="padding:8px 12px;color:#a78bfa">Intel UHD</td>
+                <td style="padding:8px 12px;text-align:right">16GB</td>
+                <td style="padding:8px 12px;text-align:right">512GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#f59e0b;width:80px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">40.1</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">97.7M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.410</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">21</td>
+                <td style="padding:8px 12px;font-weight:500">IdeaPad-Slim-3-2023-15AMN8-XA</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 5 7520U</td>
+                <td style="padding:8px 12px;color:#a78bfa">Radeon 610M</td>
+                <td style="padding:8px 12px;text-align:right">8GB</td>
+                <td style="padding:8px 12px;text-align:right">512GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:52px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">26.3</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">64.5M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.408</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">22</td>
+                <td style="padding:8px 12px;font-weight:500">IdeaPad-Slim-3-15IRH8-Z</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core i5 13420H</td>
+                <td style="padding:8px 12px;color:#a78bfa">Intel UHD</td>
+                <td style="padding:8px 12px;text-align:right">8GB</td>
+                <td style="padding:8px 12px;text-align:right">512GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:60px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">30.0</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">73.8M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.407</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">23</td>
+                <td style="padding:8px 12px;font-weight:500">ideapad-slim-3-2025-16irh10-CF</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core i7 13620H</td>
+                <td style="padding:8px 12px;color:#a78bfa">Intel UHD</td>
+                <td style="padding:8px 12px;text-align:right">16GB</td>
+                <td style="padding:8px 12px;text-align:right">512GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#f59e0b;width:80px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">40.1</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">98.8M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.406</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">24</td>
+                <td style="padding:8px 12px;font-weight:500">IdeaPad-Slim-3-2023-15IRH8-XA</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core i5 13420H</td>
+                <td style="padding:8px 12px;color:#a78bfa">Intel UHD</td>
+                <td style="padding:8px 12px;text-align:right">8GB</td>
+                <td style="padding:8px 12px;text-align:right">1024GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:67px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">33.5</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">84.2M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.398</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">25</td>
+                <td style="padding:8px 12px;font-weight:500">ideapad-slim-3-2025-16irh10-ba</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core i7 13620H</td>
+                <td style="padding:8px 12px;color:#a78bfa">Intel UHD</td>
+                <td style="padding:8px 12px;text-align:right">16GB</td>
+                <td style="padding:8px 12px;text-align:right">512GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#f59e0b;width:80px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">40.1</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">100.8M</td><td style="padding:8px 12px;text-align:right;color:#22c55e;font-weight:700">0.397</td></tr>
+</tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚠️ Bottom 15 – Worst Price/Performance (Overpriced)</div>
+        <table>
+            <thead><tr>
+                <th style="padding:10px 12px;text-align:left;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">#</th><th style="padding:10px 12px;text-align:left;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">Model</th><th style="padding:10px 12px;text-align:left;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">CPU</th>
+                <th style="padding:10px 12px;text-align:left;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">GPU</th><th style="padding:10px 12px;text-align:right;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">RAM</th><th style="padding:10px 12px;text-align:right;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">SSD</th>
+                <th style="padding:10px 12px;text-align:left;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">Performance</th><th style="padding:10px 12px;text-align:right;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">Price</th><th style="padding:10px 12px;text-align:right;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">P/P Ratio</th>
+            </tr></thead>
+            <tbody><tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">1</td>
+                <td style="padding:8px 12px;font-weight:500">ROG-Zephyrus-Duo-16-2023-GX650PY-Z</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 9 7945HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 4090</td>
+                <td style="padding:8px 12px;text-align:right">64GB</td>
+                <td style="padding:8px 12px;text-align:right">4096GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:166px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">83.4</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,300.0M</td><td style="padding:8px 12px;text-align:right;color:#ef4444;font-weight:700">0.064</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">2</td>
+                <td style="padding:8px 12px;font-weight:500">ROG-Zephyrus-Duo-16-2023-GX650PY-ZB</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 9 7945HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 4090</td>
+                <td style="padding:8px 12px;text-align:right">32GB</td>
+                <td style="padding:8px 12px;text-align:right">4096GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:161px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">80.9</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,248.0M</td><td style="padding:8px 12px;text-align:right;color:#ef4444;font-weight:700">0.065</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">3</td>
+                <td style="padding:8px 12px;font-weight:500">ROG-Zephyrus-Duo-16-2023-GX650PY-ZE</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 9 7945HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 4090</td>
+                <td style="padding:8px 12px;text-align:right">16GB</td>
+                <td style="padding:8px 12px;text-align:right">2048GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#3b82f6;width:153px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">76.9</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,128.4M</td><td style="padding:8px 12px;text-align:right;color:#ef4444;font-weight:700">0.068</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">4</td>
+                <td style="padding:8px 12px;font-weight:500">ROG-Zephyrus-Duo-16-2023-GX650PY-ZC</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 9 7945HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 4090</td>
+                <td style="padding:8px 12px;text-align:right">32GB</td>
+                <td style="padding:8px 12px;text-align:right">1024GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#3b82f6;width:155px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">77.6</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,144.0M</td><td style="padding:8px 12px;text-align:right;color:#ef4444;font-weight:700">0.068</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">5</td>
+                <td style="padding:8px 12px;font-weight:500">ROG-Zephyrus-Duo-16-2023-GX650PY-ZA</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 9 7945HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 4090</td>
+                <td style="padding:8px 12px;text-align:right">64GB</td>
+                <td style="padding:8px 12px;text-align:right">2048GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:163px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">81.7</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,196.0M</td><td style="padding:8px 12px;text-align:right;color:#ef4444;font-weight:700">0.068</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">6</td>
+                <td style="padding:8px 12px;font-weight:500">ROG-Zephyrus-Duo-16-2023-GX650PY-ZD</td>
+                <td style="padding:8px 12px;color:#93c5fd">Ryzen 9 7945HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 4090</td>
+                <td style="padding:8px 12px;text-align:right">32GB</td>
+                <td style="padding:8px 12px;text-align:right">1024GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#3b82f6;width:155px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">77.6</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,123.2M</td><td style="padding:8px 12px;text-align:right;color:#ef4444;font-weight:700">0.069</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">7</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-cQ</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5080</td>
+                <td style="padding:8px 12px;text-align:right">32GB</td>
+                <td style="padding:8px 12px;text-align:right">1024GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:161px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">80.9</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,092.6M</td><td style="padding:8px 12px;text-align:right;color:#ef4444;font-weight:700">0.074</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">8</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-cM</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5080</td>
+                <td style="padding:8px 12px;text-align:right">64GB</td>
+                <td style="padding:8px 12px;text-align:right">1024GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:166px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">83.3</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,124.7M</td><td style="padding:8px 12px;text-align:right;color:#ef4444;font-weight:700">0.074</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">9</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-mQ</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5090</td>
+                <td style="padding:8px 12px;text-align:right">32GB</td>
+                <td style="padding:8px 12px;text-align:right">1024GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:168px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">84.4</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,135.4M</td><td style="padding:8px 12px;text-align:right;color:#ef4444;font-weight:700">0.074</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">10</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-ch</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5080</td>
+                <td style="padding:8px 12px;text-align:right">64GB</td>
+                <td style="padding:8px 12px;text-align:right">6144GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:175px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">87.7</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,189.0M</td><td style="padding:8px 12px;text-align:right;color:#ef4444;font-weight:700">0.074</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">11</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-cj</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5080</td>
+                <td style="padding:8px 12px;text-align:right">64GB</td>
+                <td style="padding:8px 12px;text-align:right">8192GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:176px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">88.3</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,199.7M</td><td style="padding:8px 12px;text-align:right;color:#ef4444;font-weight:700">0.074</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">12</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-cO</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5080</td>
+                <td style="padding:8px 12px;text-align:right">32GB</td>
+                <td style="padding:8px 12px;text-align:right">2048GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:165px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">82.6</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,103.3M</td><td style="padding:8px 12px;text-align:right;color:#ef4444;font-weight:700">0.075</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">13</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-cP</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5080</td>
+                <td style="padding:8px 12px;text-align:right">32GB</td>
+                <td style="padding:8px 12px;text-align:right">3072GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:167px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">83.6</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,114.0M</td><td style="padding:8px 12px;text-align:right;color:#ef4444;font-weight:700">0.075</td></tr>
+<tr style="background:#1e293b">
+                <td style="padding:8px 12px;color:#94a3b8">14</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-cK</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5080</td>
+                <td style="padding:8px 12px;text-align:right">32GB</td>
+                <td style="padding:8px 12px;text-align:right">4096GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:168px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">84.3</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,124.7M</td><td style="padding:8px 12px;text-align:right;color:#ef4444;font-weight:700">0.075</td></tr>
+<tr style="background:#0f172a">
+                <td style="padding:8px 12px;color:#94a3b8">15</td>
+                <td style="padding:8px 12px;font-weight:500">legion-9-18iax10-cN</td>
+                <td style="padding:8px 12px;color:#93c5fd">Core Ultra 9 275HX</td>
+                <td style="padding:8px 12px;color:#a78bfa">RTX 5080</td>
+                <td style="padding:8px 12px;text-align:right">64GB</td>
+                <td style="padding:8px 12px;text-align:right">2048GB</td>
+                <td style="padding:8px 6px"><div style="background:#1e293b;border-radius:4px;width:200px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:170px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">85.0</span></td>
+                <td style="padding:8px 12px;text-align:right;color:#fbbf24">1,135.4M</td><td style="padding:8px 12px;text-align:right;color:#ef4444;font-weight:700">0.075</td></tr>
+</tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🎮 GPU Tier Analysis (≥2 laptops per tier)</div>
+        <table>
+            <thead><tr>
+                <th style="padding:10px 12px;text-align:left;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">GPU</th><th style="padding:10px 12px;text-align:center;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">Count</th><th style="padding:10px 12px;text-align:left;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">Avg Performance</th>
+                <th style="padding:10px 12px;text-align:right;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">Avg Price</th><th style="padding:10px 12px;text-align:right;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155">Avg P/P</th>
+            </tr></thead>
+            <tbody><tr style="background:#1e293b">
+            <td style="padding:6px 10px;color:#a78bfa;font-weight:500">RTX 5090</td>
+            <td style="padding:6px 10px;text-align:center">35</td>
+            <td style="padding:6px 10px"><div style="background:#1e293b;border-radius:4px;width:150px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:133px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">89.2</span></td>
+            <td style="padding:6px 10px;text-align:right;color:#fbbf24">970.5M</td>
+            <td style="padding:6px 10px;text-align:right;font-weight:600;color:#22c55e">0.096</td>
+        </tr>
+<tr style="background:#0f172a">
+            <td style="padding:6px 10px;color:#a78bfa;font-weight:500">RTX 5080</td>
+            <td style="padding:6px 10px;text-align:center">57</td>
+            <td style="padding:6px 10px"><div style="background:#1e293b;border-radius:4px;width:150px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:125px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">83.8</span></td>
+            <td style="padding:6px 10px;text-align:right;color:#fbbf24">816.2M</td>
+            <td style="padding:6px 10px;text-align:right;font-weight:600;color:#22c55e">0.111</td>
+        </tr>
+<tr style="background:#1e293b">
+            <td style="padding:6px 10px;color:#a78bfa;font-weight:500">RTX 5070 Ti</td>
+            <td style="padding:6px 10px;text-align:center">47</td>
+            <td style="padding:6px 10px"><div style="background:#1e293b;border-radius:4px;width:150px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:121px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">81.0</span></td>
+            <td style="padding:6px 10px;text-align:right;color:#fbbf24">592.4M</td>
+            <td style="padding:6px 10px;text-align:right;font-weight:600;color:#22c55e">0.140</td>
+        </tr>
+<tr style="background:#0f172a">
+            <td style="padding:6px 10px;color:#a78bfa;font-weight:500">RTX 4090</td>
+            <td style="padding:6px 10px;text-align:center">7</td>
+            <td style="padding:6px 10px"><div style="background:#1e293b;border-radius:4px;width:150px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#22c55e;width:120px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">80.1</span></td>
+            <td style="padding:6px 10px;text-align:right;color:#fbbf24">1,112.1M</td>
+            <td style="padding:6px 10px;text-align:right;font-weight:600;color:#22c55e">0.076</td>
+        </tr>
+<tr style="background:#1e293b">
+            <td style="padding:6px 10px;color:#a78bfa;font-weight:500">RTX 4080</td>
+            <td style="padding:6px 10px;text-align:center">5</td>
+            <td style="padding:6px 10px"><div style="background:#1e293b;border-radius:4px;width:150px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#3b82f6;width:118px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">78.7</span></td>
+            <td style="padding:6px 10px;text-align:right;color:#fbbf24">856.9M</td>
+            <td style="padding:6px 10px;text-align:right;font-weight:600;color:#22c55e">0.092</td>
+        </tr>
+<tr style="background:#0f172a">
+            <td style="padding:6px 10px;color:#a78bfa;font-weight:500">RTX 5070</td>
+            <td style="padding:6px 10px;text-align:center">100</td>
+            <td style="padding:6px 10px"><div style="background:#1e293b;border-radius:4px;width:150px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#3b82f6;width:113px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">75.6</span></td>
+            <td style="padding:6px 10px;text-align:right;color:#fbbf24">386.3M</td>
+            <td style="padding:6px 10px;text-align:right;font-weight:600;color:#22c55e">0.201</td>
+        </tr>
+<tr style="background:#1e293b">
+            <td style="padding:6px 10px;color:#a78bfa;font-weight:500">RTX 5060</td>
+            <td style="padding:6px 10px;text-align:center">180</td>
+            <td style="padding:6px 10px"><div style="background:#1e293b;border-radius:4px;width:150px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#3b82f6;width:102px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">68.6</span></td>
+            <td style="padding:6px 10px;text-align:right;color:#fbbf24">289.6M</td>
+            <td style="padding:6px 10px;text-align:right;font-weight:600;color:#22c55e">0.245</td>
+        </tr>
+<tr style="background:#0f172a">
+            <td style="padding:6px 10px;color:#a78bfa;font-weight:500">RTX 4060</td>
+            <td style="padding:6px 10px;text-align:center">17</td>
+            <td style="padding:6px 10px"><div style="background:#1e293b;border-radius:4px;width:150px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#3b82f6;width:96px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">64.3</span></td>
+            <td style="padding:6px 10px;text-align:right;color:#fbbf24">378.1M</td>
+            <td style="padding:6px 10px;text-align:right;font-weight:600;color:#22c55e">0.207</td>
+        </tr>
+<tr style="background:#1e293b">
+            <td style="padding:6px 10px;color:#a78bfa;font-weight:500">RTX 4070</td>
+            <td style="padding:6px 10px;text-align:center">5</td>
+            <td style="padding:6px 10px"><div style="background:#1e293b;border-radius:4px;width:150px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#3b82f6;width:94px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">63.1</span></td>
+            <td style="padding:6px 10px;text-align:right;color:#fbbf24">258.5M</td>
+            <td style="padding:6px 10px;text-align:right;font-weight:600;color:#22c55e">0.253</td>
+        </tr>
+<tr style="background:#0f172a">
+            <td style="padding:6px 10px;color:#a78bfa;font-weight:500">RTX 4050</td>
+            <td style="padding:6px 10px;text-align:center">21</td>
+            <td style="padding:6px 10px"><div style="background:#1e293b;border-radius:4px;width:150px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#3b82f6;width:93px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">62.1</span></td>
+            <td style="padding:6px 10px;text-align:right;color:#fbbf24">240.8M</td>
+            <td style="padding:6px 10px;text-align:right;font-weight:600;color:#22c55e">0.269</td>
+        </tr>
+<tr style="background:#1e293b">
+            <td style="padding:6px 10px;color:#a78bfa;font-weight:500">RTX 5050</td>
+            <td style="padding:6px 10px;text-align:center">64</td>
+            <td style="padding:6px 10px"><div style="background:#1e293b;border-radius:4px;width:150px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#3b82f6;width:92px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">61.4</span></td>
+            <td style="padding:6px 10px;text-align:right;color:#fbbf24">224.3M</td>
+            <td style="padding:6px 10px;text-align:right;font-weight:600;color:#22c55e">0.282</td>
+        </tr>
+<tr style="background:#0f172a">
+            <td style="padding:6px 10px;color:#a78bfa;font-weight:500">Arc 140T</td>
+            <td style="padding:6px 10px;text-align:center">3</td>
+            <td style="padding:6px 10px"><div style="background:#1e293b;border-radius:4px;width:150px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#f59e0b;width:85px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">56.8</span></td>
+            <td style="padding:6px 10px;text-align:right;color:#fbbf24">261.7M</td>
+            <td style="padding:6px 10px;text-align:right;font-weight:600;color:#22c55e">0.221</td>
+        </tr>
+<tr style="background:#1e293b">
+            <td style="padding:6px 10px;color:#a78bfa;font-weight:500">M4 10-Core</td>
+            <td style="padding:6px 10px;text-align:center">20</td>
+            <td style="padding:6px 10px"><div style="background:#1e293b;border-radius:4px;width:150px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#f59e0b;width:82px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">54.8</span></td>
+            <td style="padding:6px 10px;text-align:right;color:#fbbf24">236.9M</td>
+            <td style="padding:6px 10px;text-align:right;font-weight:600;color:#22c55e">0.236</td>
+        </tr>
+<tr style="background:#0f172a">
+            <td style="padding:6px 10px;color:#a78bfa;font-weight:500">RTX 3050</td>
+            <td style="padding:6px 10px;text-align:center">13</td>
+            <td style="padding:6px 10px"><div style="background:#1e293b;border-radius:4px;width:150px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#f59e0b;width:77px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">51.7</span></td>
+            <td style="padding:6px 10px;text-align:right;color:#fbbf24">181.6M</td>
+            <td style="padding:6px 10px;text-align:right;font-weight:600;color:#22c55e">0.294</td>
+        </tr>
+<tr style="background:#1e293b">
+            <td style="padding:6px 10px;color:#a78bfa;font-weight:500">M4 8-Core</td>
+            <td style="padding:6px 10px;text-align:center">4</td>
+            <td style="padding:6px 10px"><div style="background:#1e293b;border-radius:4px;width:150px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#f59e0b;width:75px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">50.6</span></td>
+            <td style="padding:6px 10px;text-align:right;color:#fbbf24">165.1M</td>
+            <td style="padding:6px 10px;text-align:right;font-weight:600;color:#22c55e">0.307</td>
+        </tr>
+<tr style="background:#0f172a">
+            <td style="padding:6px 10px;color:#a78bfa;font-weight:500">Intel Arc</td>
+            <td style="padding:6px 10px;text-align:center">72</td>
+            <td style="padding:6px 10px"><div style="background:#1e293b;border-radius:4px;width:150px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#f59e0b;width:71px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">47.8</span></td>
+            <td style="padding:6px 10px;text-align:right;color:#fbbf24">190.4M</td>
+            <td style="padding:6px 10px;text-align:right;font-weight:600;color:#22c55e">0.261</td>
+        </tr>
+<tr style="background:#1e293b">
+            <td style="padding:6px 10px;color:#a78bfa;font-weight:500">Adreno X1</td>
+            <td style="padding:6px 10px;text-align:center">4</td>
+            <td style="padding:6px 10px"><div style="background:#1e293b;border-radius:4px;width:150px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:58px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">39.1</span></td>
+            <td style="padding:6px 10px;text-align:right;color:#fbbf24">275.6M</td>
+            <td style="padding:6px 10px;text-align:right;font-weight:600;color:#22c55e">0.142</td>
+        </tr>
+<tr style="background:#0f172a">
+            <td style="padding:6px 10px;color:#a78bfa;font-weight:500">Radeon Vega 8</td>
+            <td style="padding:6px 10px;text-align:center">9</td>
+            <td style="padding:6px 10px"><div style="background:#1e293b;border-radius:4px;width:150px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:55px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">37.1</span></td>
+            <td style="padding:6px 10px;text-align:right;color:#fbbf24">79.6M</td>
+            <td style="padding:6px 10px;text-align:right;font-weight:600;color:#22c55e">0.469</td>
+        </tr>
+<tr style="background:#1e293b">
+            <td style="padding:6px 10px;color:#a78bfa;font-weight:500">Intel UHD</td>
+            <td style="padding:6px 10px;text-align:center">99</td>
+            <td style="padding:6px 10px"><div style="background:#1e293b;border-radius:4px;width:150px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:51px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">34.1</span></td>
+            <td style="padding:6px 10px;text-align:right;color:#fbbf24">104.7M</td>
+            <td style="padding:6px 10px;text-align:right;font-weight:600;color:#22c55e">0.340</td>
+        </tr>
+<tr style="background:#0f172a">
+            <td style="padding:6px 10px;color:#a78bfa;font-weight:500">Radeon 610M</td>
+            <td style="padding:6px 10px;text-align:center">11</td>
+            <td style="padding:6px 10px"><div style="background:#1e293b;border-radius:4px;width:150px;height:18px;display:inline-block;vertical-align:middle"><div style="background:#ef4444;width:38px;height:18px;border-radius:4px"></div></div> <span style="font-weight:600">25.5</span></td>
+            <td style="padding:6px 10px;text-align:right;color:#fbbf24">60.6M</td>
+            <td style="padding:6px 10px;text-align:right;font-weight:600;color:#22c55e">0.422</td>
+        </tr>
+</tbody>
+        </table>
+    </div>
+
+    <div style="text-align:center;padding:32px;color:#475569;font-size:12px">
+        Generated by analyze_laptops.py &bull; Data from laptops.db (read-only) &bull; 2026-02-19 22:00
+    </div>
+
+</div>
+</body>
+</html>
