@@ -5,6 +5,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   scrape-and-release:
@@ -47,6 +49,30 @@ jobs:
             **Artifacts:**
             - `laptops_db.zip` — SQLite database with all scraped laptop data
             - `laptop_analysis_report.html` — Styled HTML price-to-performance report
+
+            **View the report online:** https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/laptop_analysis_report.html
           files: |
             laptops_db.zip
             laptop_analysis_report.html
+
+      - name: Prepare Pages directory
+        run: |
+          mkdir -p _site
+          cp laptop_analysis_report.html _site/
+          echo '<meta http-equiv="refresh" content="0;url=laptop_analysis_report.html">' > _site/index.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy-pages:
+    needs: scrape-and-release
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

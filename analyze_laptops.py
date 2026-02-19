@@ -339,6 +339,7 @@ def analyze(rows: list[dict]) -> list[dict]:
         ppr = comp / price_m if price_m > 0 else None     # performance per M-Rial
 
         results.append({
+            "slug": row.get("slug", ""),
             "title": row.get("title", ""),
             "model_code": row.get("model_code", ""),
             "cpu_model": row.get("cpu_model", ""),
@@ -543,13 +544,20 @@ def generate_html_report(results: list[dict]):
                       f'</div>')
     hist_html += '</div>'
 
+    def laptop_link(r):
+        name = esc(r['model_code'] or r['title'][:40])
+        slug = r.get('slug', '')
+        if slug:
+            return f'<a href="https://exo.ir/{esc(slug)}" target="_blank" rel="noopener">{name}</a>'
+        return name
+
     def make_table(data: list[dict], show_ppr=False, limit=20):
         rows_html = ""
         for i, r in enumerate(data[:limit], 1):
             bg = "#1e293b" if i % 2 == 0 else "#0f172a"
             rows_html += f"""<tr style="background:{bg}">
                 <td style="padding:8px 12px;color:#94a3b8">{i}</td>
-                <td style="padding:8px 12px;font-weight:500">{esc(r['model_code'] or r['title'][:40])}</td>
+                <td style="padding:8px 12px;font-weight:500">{laptop_link(r)}</td>
                 <td style="padding:8px 12px;color:#93c5fd">{esc(r['cpu_model'])}</td>
                 <td style="padding:8px 12px;color:#a78bfa">{esc(r['gpu_model'])}</td>
                 <td style="padding:8px 12px;text-align:right">{(r['ram_mb'] or 0)//1024}GB</td>
@@ -569,7 +577,7 @@ def generate_html_report(results: list[dict]):
             bg = "#1e293b" if i % 2 == 0 else "#0f172a"
             rows_html += f"""<tr style="background:{bg}">
                 <td style="padding:6px 10px;color:#94a3b8">{i}</td>
-                <td style="padding:6px 10px;font-weight:500">{esc(r['model_code'] or r['title'][:35])}</td>
+                <td style="padding:6px 10px;font-weight:500">{laptop_link(r)}</td>
                 <td style="padding:6px 10px;text-align:center;color:#60a5fa">{r['cpu_score']}</td>
                 <td style="padding:6px 10px;text-align:center;color:#a78bfa">{r['gpu_score']}</td>
                 <td style="padding:6px 10px;text-align:center;color:#34d399">{r['ram_score']}</td>
@@ -608,6 +616,26 @@ def generate_html_report(results: list[dict]):
     th_style = 'style="padding:10px 12px;text-align:left;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155"'
     th_r = 'style="padding:10px 12px;text-align:right;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155"'
     th_c = 'style="padding:10px 12px;text-align:center;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #334155"'
+
+    # Build explorer JSON: compact array-of-arrays for all laptops
+    # [idx, model, cpu, gpu, ramGB, ssdGB, screen, weight, perf, priceM, ppr, slug]
+    explorer_data = []
+    for i, r in enumerate(results):
+        explorer_data.append([
+            i + 1,
+            r['model_code'] or (r['title'][:40] if r['title'] else ''),
+            r['cpu_model'] or '',
+            r['gpu_model'] or '',
+            (r['ram_mb'] or 0) // 1024,
+            r['ssd_gb'] or 0,
+            r['screen_inches'] or 0,
+            r['weight_kg'] or 0,
+            r['perf_score'],
+            r['price_m'],
+            r['ppr'],
+            r['slug'],
+        ])
+    explorer_json = json.dumps(explorer_data, ensure_ascii=False)
 
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -664,6 +692,55 @@ def generate_html_report(results: list[dict]):
         .methodology table {{ font-size: 13px; }}
         .methodology td, .methodology th {{ padding: 8px 12px; border-bottom: 1px solid #334155; }}
         .bar-chart {{ margin: 20px 24px; }}
+        /* Links */
+        table a {{ color: #60a5fa; text-decoration: none; transition: color 0.15s; }}
+        table a:hover {{ color: #93c5fd; text-decoration: underline; }}
+        /* Explorer */
+        .explorer-controls {{
+            display: flex; flex-wrap: wrap; gap: 12px; padding: 16px 20px;
+            background: #1e293b; border-bottom: 1px solid #334155; align-items: center;
+        }}
+        .explorer-controls input[type=text] {{
+            background: #0f172a; border: 1px solid #334155; color: #e2e8f0;
+            border-radius: 8px; padding: 8px 14px; font-size: 13px; min-width: 220px;
+            outline: none; transition: border-color 0.2s;
+        }}
+        .explorer-controls input[type=text]:focus {{ border-color: #6366f1; }}
+        .explorer-controls select {{
+            background: #0f172a; border: 1px solid #334155; color: #e2e8f0;
+            border-radius: 8px; padding: 8px 10px; font-size: 12px;
+            outline: none; cursor: pointer;
+        }}
+        .explorer-controls button, .explorer-controls .btn {{
+            background: linear-gradient(135deg, #4f46e5, #6366f1); color: #fff;
+            border: none; border-radius: 8px; padding: 8px 16px; font-size: 12px;
+            cursor: pointer; font-weight: 600; transition: opacity 0.2s;
+        }}
+        .explorer-controls button:hover {{ opacity: 0.85; }}
+        .explorer-info {{
+            padding: 8px 20px; background: #0f172a; color: #64748b; font-size: 12px;
+            border-bottom: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center;
+        }}
+        #explorerTable th {{
+            padding: 10px 12px; text-align: left; color: #94a3b8; font-size: 11px;
+            text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #334155;
+            cursor: pointer; user-select: none; position: relative; white-space: nowrap;
+        }}
+        #explorerTable th:hover {{ color: #e2e8f0; }}
+        #explorerTable th .sort-icon {{ margin-left: 4px; font-size: 10px; opacity: 0.4; }}
+        #explorerTable th.sort-asc .sort-icon, #explorerTable th.sort-desc .sort-icon {{ opacity: 1; color: #6366f1; }}
+        .pagination {{
+            display: flex; align-items: center; gap: 8px; padding: 16px 20px;
+            background: #1e293b; border-top: 1px solid #334155; justify-content: center;
+        }}
+        .pagination button {{
+            background: #334155; border: none; color: #e2e8f0; border-radius: 6px;
+            padding: 6px 12px; cursor: pointer; font-size: 12px; transition: background 0.2s;
+        }}
+        .pagination button:hover {{ background: #475569; }}
+        .pagination button.active {{ background: #6366f1; }}
+        .pagination button:disabled {{ opacity: 0.3; cursor: default; }}
+        .pagination span {{ color: #94a3b8; font-size: 12px; }}
     </style>
 </head>
 <body>
@@ -771,11 +848,208 @@ def generate_html_report(results: list[dict]):
         </table>
     </div>
 
+    <div class="section" id="explorerSection">
+        <div class="section-title">🔎 All Data Explorer</div>
+        <div class="explorer-controls">
+            <input type="text" id="expSearch" placeholder="Search model, CPU, GPU…" oninput="applyExplorer()">
+            <select id="expGpu" onchange="applyExplorer()"><option value="">All GPUs</option></select>
+            <select id="expCpu" onchange="applyExplorer()"><option value="">All CPUs</option></select>
+            <select id="expRam" onchange="applyExplorer()">
+                <option value="">All RAM</option>
+                <option value="0-8">≤ 8 GB</option>
+                <option value="8-16">8–16 GB</option>
+                <option value="16-32">16–32 GB</option>
+                <option value="32-64">32–64 GB</option>
+                <option value="64-9999">64+ GB</option>
+            </select>
+            <select id="expPrice" onchange="applyExplorer()">
+                <option value="">All Prices</option>
+                <option value="0-30">≤ 30M</option>
+                <option value="30-60">30–60M</option>
+                <option value="60-100">60–100M</option>
+                <option value="100-200">100–200M</option>
+                <option value="200-9999">200M+</option>
+            </select>
+            <select id="expPerPage" onchange="expPage=0;applyExplorer()">
+                <option value="25">25 / page</option>
+                <option value="50" selected>50 / page</option>
+                <option value="100">100 / page</option>
+                <option value="0">Show All</option>
+            </select>
+            <button onclick="exportCSV()">⬇ CSV</button>
+            <button onclick="resetExplorer()" style="background:#334155">✕ Reset</button>
+        </div>
+        <div class="explorer-info">
+            <span id="expInfo">Showing all</span>
+            <span id="expTotal"></span>
+        </div>
+        <div style="overflow-x:auto">
+        <table id="explorerTable">
+            <thead><tr>
+                <th onclick="sortExp(0)"># <span class="sort-icon">⇅</span></th>
+                <th onclick="sortExp(1)">Model <span class="sort-icon">⇅</span></th>
+                <th onclick="sortExp(2)">CPU <span class="sort-icon">⇅</span></th>
+                <th onclick="sortExp(3)">GPU <span class="sort-icon">⇅</span></th>
+                <th onclick="sortExp(4)" style="text-align:right">RAM <span class="sort-icon">⇅</span></th>
+                <th onclick="sortExp(5)" style="text-align:right">SSD <span class="sort-icon">⇅</span></th>
+                <th onclick="sortExp(6)" style="text-align:right">Screen <span class="sort-icon">⇅</span></th>
+                <th onclick="sortExp(7)" style="text-align:right">Weight <span class="sort-icon">⇅</span></th>
+                <th onclick="sortExp(8)" style="text-align:right">Perf <span class="sort-icon">⇅</span></th>
+                <th onclick="sortExp(9)" style="text-align:right">Price <span class="sort-icon">⇅</span></th>
+                <th onclick="sortExp(10)" style="text-align:right">P/P <span class="sort-icon">⇅</span></th>
+            </tr></thead>
+            <tbody id="expBody"></tbody>
+        </table>
+        </div>
+        <div class="pagination" id="expPagination"></div>
+    </div>
+
     <div style="text-align:center;padding:32px;color:#475569;font-size:12px">
         Generated by analyze_laptops.py &bull; Data from laptops.db (read-only) &bull; {datetime.now().strftime('%Y-%m-%d %H:%M')}
     </div>
 
 </div>
+
+<script>
+const DATA = {explorer_json};
+let expSortCol = -1, expSortAsc = true, expPage = 0;
+let filtered = [...DATA];
+
+// Populate GPU/CPU dropdowns
+(function() {{
+    const gpus = [...new Set(DATA.map(r=>r[3]).filter(Boolean))].sort();
+    const cpus = [...new Set(DATA.map(r=>r[2]).filter(Boolean))].sort();
+    const gs = document.getElementById('expGpu');
+    gpus.forEach(g => {{ const o=document.createElement('option');o.value=g;o.textContent=g;gs.appendChild(o); }});
+    const cs = document.getElementById('expCpu');
+    cpus.forEach(c => {{ const o=document.createElement('option');o.value=c;o.textContent=c;cs.appendChild(o); }});
+    applyExplorer();
+}})();
+
+function applyExplorer() {{
+    const q = document.getElementById('expSearch').value.toLowerCase();
+    const gpu = document.getElementById('expGpu').value;
+    const cpu = document.getElementById('expCpu').value;
+    const ram = document.getElementById('expRam').value;
+    const price = document.getElementById('expPrice').value;
+
+    filtered = DATA.filter(r => {{
+        // r: [idx, model, cpu, gpu, ramGB, ssdGB, screen, weight, perf, priceM, ppr, slug]
+        if (q && !(r[1]+' '+r[2]+' '+r[3]).toLowerCase().includes(q)) return false;
+        if (gpu && r[3] !== gpu) return false;
+        if (cpu && r[2] !== cpu) return false;
+        if (ram) {{
+            const [lo,hi] = ram.split('-').map(Number);
+            if (r[4] < lo || r[4] > hi) return false;
+        }}
+        if (price) {{
+            const [lo,hi] = price.split('-').map(Number);
+            if (r[9] < lo || r[9] > hi) return false;
+        }}
+        return true;
+    }});
+
+    if (expSortCol >= 0) {{
+        filtered.sort((a,b) => {{
+            let va = a[expSortCol], vb = b[expSortCol];
+            if (va == null) va = -Infinity;
+            if (vb == null) vb = -Infinity;
+            if (typeof va === 'string') return expSortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+            return expSortAsc ? va - vb : vb - va;
+        }});
+    }}
+
+    renderExplorer();
+}}
+
+function renderExplorer() {{
+    const perPage = parseInt(document.getElementById('expPerPage').value);
+    const total = filtered.length;
+    const start = perPage > 0 ? expPage * perPage : 0;
+    const end = perPage > 0 ? Math.min(start + perPage, total) : total;
+    const page = filtered.slice(start, end);
+
+    let html = '';
+    page.forEach((r, i) => {{
+        const bg = (start+i) % 2 === 0 ? '#0f172a' : '#1e293b';
+        const name = r[11] ? '<a href="https://exo.ir/'+r[11]+'" target="_blank" rel="noopener">'+r[1]+'</a>' : r[1];
+        const pprVal = r[10] != null ? r[10].toFixed(3) : 'N/A';
+        const pprClr = (r[10]||0) > 0.3 ? '#22c55e' : (r[10]||0) > 0.15 ? '#f59e0b' : '#ef4444';
+        const priceStr = r[9] > 0 ? r[9].toFixed(1)+'M' : '<span style="color:#64748b">N/A</span>';
+        html += '<tr style="background:'+bg+'">' +
+            '<td style="padding:8px 12px;color:#94a3b8">'+(start+i+1)+'</td>' +
+            '<td style="padding:8px 12px;font-weight:500">'+name+'</td>' +
+            '<td style="padding:8px 12px;color:#93c5fd">'+r[2]+'</td>' +
+            '<td style="padding:8px 12px;color:#a78bfa">'+r[3]+'</td>' +
+            '<td style="padding:8px 12px;text-align:right">'+r[4]+'GB</td>' +
+            '<td style="padding:8px 12px;text-align:right">'+(r[5]||0)+'GB</td>' +
+            '<td style="padding:8px 12px;text-align:right">'+(r[6]||'-')+'"</td>' +
+            '<td style="padding:8px 12px;text-align:right">'+(r[7] ? r[7].toFixed(1)+'kg' : '-')+'</td>' +
+            '<td style="padding:8px 12px;text-align:right;font-weight:700">'+r[8].toFixed(1)+'</td>' +
+            '<td style="padding:8px 12px;text-align:right;color:#fbbf24">'+priceStr+'</td>' +
+            '<td style="padding:8px 12px;text-align:right;color:'+pprClr+';font-weight:700">'+pprVal+'</td></tr>';
+    }});
+    document.getElementById('expBody').innerHTML = html;
+    document.getElementById('expInfo').textContent = 'Showing '+(start+1)+'–'+end+' of '+total;
+    document.getElementById('expTotal').textContent = total + ' laptops';
+
+    // Pagination
+    if (perPage > 0 && total > perPage) {{
+        const pages = Math.ceil(total / perPage);
+        let ph = '<button '+(expPage===0?'disabled':'')+' onclick="expPage=0;renderExplorer()">«</button>';
+        ph += '<button '+(expPage===0?'disabled':'')+' onclick="expPage--;renderExplorer()">‹</button>';
+        const startP = Math.max(0, expPage-3), endP = Math.min(pages, expPage+4);
+        for (let p=startP; p<endP; p++) {{
+            ph += '<button class="'+(p===expPage?'active':'')+'" onclick="expPage='+p+';renderExplorer()">'+(p+1)+'</button>';
+        }}
+        ph += '<button '+(expPage>=pages-1?'disabled':'')+' onclick="expPage++;renderExplorer()">›</button>';
+        ph += '<button '+(expPage>=pages-1?'disabled':'')+' onclick="expPage=pages-1;renderExplorer()">»</button>';
+        ph += ' <span>Page '+(expPage+1)+' / '+pages+'</span>';
+        document.getElementById('expPagination').innerHTML = ph;
+    }} else {{
+        document.getElementById('expPagination').innerHTML = '';
+    }}
+}}
+
+function sortExp(col) {{
+    const ths = document.querySelectorAll('#explorerTable th');
+    ths.forEach(th => th.classList.remove('sort-asc','sort-desc'));
+    if (expSortCol === col) {{ expSortAsc = !expSortAsc; }}
+    else {{ expSortCol = col; expSortAsc = true; }}
+    ths[col].classList.add(expSortAsc ? 'sort-asc' : 'sort-desc');
+    expPage = 0;
+    applyExplorer();
+}}
+
+function resetExplorer() {{
+    document.getElementById('expSearch').value = '';
+    document.getElementById('expGpu').value = '';
+    document.getElementById('expCpu').value = '';
+    document.getElementById('expRam').value = '';
+    document.getElementById('expPrice').value = '';
+    expSortCol = -1; expSortAsc = true; expPage = 0;
+    const ths = document.querySelectorAll('#explorerTable th');
+    ths.forEach(th => th.classList.remove('sort-asc','sort-desc'));
+    applyExplorer();
+}}
+
+function exportCSV() {{
+    const hdr = ['#','Model','CPU','GPU','RAM_GB','SSD_GB','Screen','Weight_kg','Perf_Score','Price_M','PPR','URL'];
+    let csv = hdr.join(',') + '\\n';
+    filtered.forEach((r, i) => {{
+        const url = r[11] ? 'https://exo.ir/'+r[11] : '';
+        const row = [i+1, '"'+r[1].replace(/"/g,'""')+'"', '"'+r[2]+'"', '"'+r[3]+'"',
+                     r[4], r[5]||0, r[6]||'', r[7]||'', r[8].toFixed(1),
+                     r[9] > 0 ? r[9].toFixed(1) : '', r[10] != null ? r[10].toFixed(3) : '', url];
+        csv += row.join(',') + '\\n';
+    }});
+    const blob = new Blob([csv], {{type:'text/csv'}});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'laptops_export.csv';
+    a.click();
+}}
+</script>
 </body>
 </html>"""
 
