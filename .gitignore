@@ -1,0 +1,19 @@
+# SQLite databases
+*.db
+*.db-shm
+*.db-wal
+
+# Reports and generated files
+*.html
+*.zip
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# OS Files
+.DS_Store
+Thumbs.db

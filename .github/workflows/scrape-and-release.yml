@@ -1,0 +1,78 @@
+name: Scrape & Release
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  scrape-and-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run scraper
+        run: python3 exo_laptop_scraper.py
+
+      - name: Run analyzer
+        run: python3 analyze_laptops.py
+
+      - name: Zip database
+        run: zip laptops_db.zip laptops.db
+
+      - name: Generate release tag
+        id: tag
+        run: echo "tag=scrape-$(date -u +'%Y-%m-%d-%H%M')" >> "$GITHUB_OUTPUT"
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: "Scrape ${{ steps.tag.outputs.tag }}"
+          body: |
+            Automated scrape run on ${{ steps.tag.outputs.tag }}.
+
+            **Artifacts:**
+            - `laptops_db.zip` — SQLite database with all scraped laptop data
+            - `laptop_analysis_report.html` — Styled HTML price-to-performance report
+
+            **View the report online:** https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/laptop_analysis_report.html
+          files: |
+            laptops_db.zip
+            laptop_analysis_report.html
+
+      - name: Prepare Pages directory
+        run: |
+          mkdir -p _site
+          cp laptop_analysis_report.html _site/
+          echo '<meta http-equiv="refresh" content="0;url=laptop_analysis_report.html">' > _site/index.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy-pages:
+    needs: scrape-and-release
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
