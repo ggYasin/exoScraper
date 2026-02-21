@@ -3,8 +3,7 @@
 *.db-shm
 *.db-wal
 
-# Reports and generated files
-*.html
+# Build artifacts
 *.zip
 
 # Python

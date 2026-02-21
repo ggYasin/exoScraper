@@ -114,6 +114,7 @@ def init_db(db_path: str = DB_PATH) -> None:
             cpu_core_count      INTEGER,
             cpu_thread_count    INTEGER,
             full_specs_json     TEXT,
+            image_url           TEXT,
             scraped_at          TEXT DEFAULT (datetime('now')),
             UNIQUE(laptop_id)
         );
@@ -440,6 +441,16 @@ def scrape_laptop_detail(laptop: dict, session: requests.Session) -> dict:
     details["cpu_core_count"] = parse_cpu_cores(details.get("cpu_cores"))
     details["cpu_thread_count"] = parse_cpu_threads(details.get("cpu_cores"))
 
+    # Image — look in zoom-preview-area for the main product photo
+    zoom_area = soup.find(id="zoom-preview-area")
+    if zoom_area:
+        img_el = zoom_area.find("img")
+    else:
+        img_el = None
+    if img_el and img_el.get("src"):
+        src = img_el.get("src")
+        details["image_url"] = src if src.startswith("http") else urljoin("https://exo.ir", src)
+
     return details
 
 
@@ -453,8 +464,8 @@ def save_detail(laptop_id: int, details: dict, db_path: str = DB_PATH) -> None:
                  cpu_model, cpu_cores, ram, gpu_model, hdd, ssd,
                  screen_size, laptop_series, weight,
                  ram_mb, ssd_gb, hdd_gb, screen_inches, weight_kg,
-                 cpu_core_count, cpu_thread_count, full_specs_json)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 cpu_core_count, cpu_thread_count, full_specs_json, image_url)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 laptop_id, details.get("slug", ""), details.get("title"),
@@ -468,13 +479,44 @@ def save_detail(laptop_id: int, details: dict, db_path: str = DB_PATH) -> None:
                 details.get("hdd_gb"), details.get("screen_inches"),
                 details.get("weight_kg"),
                 details.get("cpu_core_count"), details.get("cpu_thread_count"),
-                details.get("full_specs_json"),
+                details.get("full_specs_json"), details.get("image_url"),
             ),
         )
         conn.execute("UPDATE laptops SET scraped_details = 1 WHERE id = ?", (laptop_id,))
         conn.commit()
     finally:
         conn.close()
+
+def export_to_json(db_path: str = DB_PATH, json_path: str = "laptops.json") -> None:
+    """Export the laptops_details table to a JSON file format suitable for the web UI."""
+    print(f"\n  Exporting DB to {json_path}...")
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    rows = conn.execute("SELECT * FROM laptop_details").fetchall()
+    conn.close()
+
+    export_data = []
+    for r in rows:
+        d = dict(r)
+        
+        # We don't need to send the full huge string to the frontend if we just want key specs, 
+        # but let's parse it so frontend can use it if we want to show advanced details.
+        if d.get("full_specs_json"):
+            try:
+                d["full_specs"] = json.loads(d["full_specs_json"])
+            except json.JSONDecodeError:
+                d["full_specs"] = {}
+        else:
+            d["full_specs"] = {}
+        
+        # Remove the raw string to save space in the JSON payload
+        d.pop("full_specs_json", None)
+        
+        export_data.append(d)
+
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump(export_data, f, ensure_ascii=False, indent=2)
+    print(f"  ✓ Exported {len(export_data)} laptops to {json_path}")
 
 
 # Thread-local sessions
@@ -627,6 +669,10 @@ def main():
 
     if run_phase2 and not shutdown_event.is_set():
         run_scrape(db)
+        
+    if not shutdown_event.is_set():
+        # Only export JSON if we didn't get cancelled via Ctrl+C
+        export_to_json(db)
 
     print("\n" + "═" * 60)
     print("  All done!")

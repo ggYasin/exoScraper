@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exo Laptop Explorer — Dynamic Price/Performance Analyzer</title>
+    <meta name="description" content="Interactive laptop price-to-performance analyzer with dynamic scoring, filtering, and data exploration for exo.ir laptops.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- ─── Sidebar ─── -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-icon">⚡</div>
+                <h1>Exo Explorer</h1>
+                <p class="brand-sub">Price / Performance Analyzer</p>
+            </div>
+
+            <!-- Weights -->
+            <section class="sidebar-section">
+                <h2><span class="section-icon">⚖️</span> Performance Weights</h2>
+                <p class="hint">Adjust scoring formula. Total must be 100%.</p>
+                <div class="weight-control" data-id="cpu">
+                    <div class="weight-label"><span class="dot dot-cpu"></span>CPU<span class="weight-val" id="val-cpu">30%</span></div>
+                    <input type="range" id="w-cpu" min="0" max="100" step="5" value="30">
+                </div>
+                <div class="weight-control" data-id="gpu">
+                    <div class="weight-label"><span class="dot dot-gpu"></span>GPU<span class="weight-val" id="val-gpu">30%</span></div>
+                    <input type="range" id="w-gpu" min="0" max="100" step="5" value="30">
+                </div>
+                <div class="weight-control" data-id="ram">
+                    <div class="weight-label"><span class="dot dot-ram"></span>RAM<span class="weight-val" id="val-ram">15%</span></div>
+                    <input type="range" id="w-ram" min="0" max="100" step="5" value="15">
+                </div>
+                <div class="weight-control" data-id="display">
+                    <div class="weight-label"><span class="dot dot-display"></span>Display<span class="weight-val" id="val-display">15%</span></div>
+                    <input type="range" id="w-display" min="0" max="100" step="5" value="15">
+                </div>
+                <div class="weight-control" data-id="storage">
+                    <div class="weight-label"><span class="dot dot-storage"></span>Storage<span class="weight-val" id="val-storage">10%</span></div>
+                    <input type="range" id="w-storage" min="0" max="100" step="5" value="10">
+                </div>
+                <div class="weight-sum" id="weight-sum">
+                    <span>Total:</span>
+                    <strong id="weight-sum-val">100%</strong>
+                </div>
+                <button class="btn btn-sm btn-ghost" id="btn-reset-weights">Reset Defaults</button>
+            </section>
+
+            <!-- Filters -->
+            <section class="sidebar-section">
+                <h2><span class="section-icon">🔍</span> Filters</h2>
+                <div class="filter-group">
+                    <label for="f-search">Search</label>
+                    <input type="text" id="f-search" placeholder="e.g. Legion, ROG, i7…">
+                </div>
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="f-ram">Min RAM</label>
+                        <select id="f-ram">
+                            <option value="0">Any</option>
+                            <option value="8">8 GB</option>
+                            <option value="16">16 GB</option>
+                            <option value="32">32 GB</option>
+                            <option value="64">64 GB</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="f-ssd">Min SSD</label>
+                        <select id="f-ssd">
+                            <option value="0">Any</option>
+                            <option value="256">256 GB</option>
+                            <option value="512">512 GB</option>
+                            <option value="1000">1 TB</option>
+                            <option value="2000">2 TB</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="f-price-min">Min Price (M)</label>
+                        <input type="number" id="f-price-min" placeholder="0" min="0" step="1">
+                    </div>
+                    <div class="filter-group">
+                        <label for="f-price-max">Max Price (M)</label>
+                        <input type="number" id="f-price-max" placeholder="∞" min="0" step="1">
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label for="f-gpu">GPU Type</label>
+                    <select id="f-gpu">
+                        <option value="">Any</option>
+                        <option value="RTX 50">RTX 50-series</option>
+                        <option value="RTX 40">RTX 40-series</option>
+                        <option value="RTX 30">RTX 30-series</option>
+                        <option value="GTX">GTX</option>
+                        <option value="Radeon">AMD Radeon</option>
+                        <option value="Intel">Intel Integrated</option>
+                        <option value="M4">Apple M4</option>
+                        <option value="M3">Apple M3</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="f-brand">Brand / Series</label>
+                    <select id="f-brand">
+                        <option value="">Any</option>
+                    </select>
+                </div>
+                <button class="btn btn-sm btn-ghost" id="btn-clear-filters">Clear All Filters</button>
+            </section>
+        </aside>
+
+        <!-- ─── Main ─── -->
+        <main class="main-content">
+            <!-- Toggle sidebar on mobile -->
+            <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">☰</button>
+
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stat-card">
+                    <div class="stat-label">Total Laptops</div>
+                    <div class="stat-value" id="stat-total">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Showing</div>
+                    <div class="stat-value" id="stat-showing">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg. Score</div>
+                    <div class="stat-value accent" id="stat-avg-score">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg. Price</div>
+                    <div class="stat-value gold" id="stat-avg-price">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Best Value</div>
+                    <div class="stat-value green" id="stat-best-pp">—</div>
+                </div>
+            </div>
+
+            <!-- Score Breakdown (expandable) -->
+            <details class="methodology-panel" id="methodology">
+                <summary>📐 Scoring Methodology & Score Breakdown</summary>
+                <div class="methodology-body">
+                    <table class="meth-table">
+                        <thead><tr><th>Component</th><th>Weight</th><th>Method</th></tr></thead>
+                        <tbody>
+                            <tr><td class="c-cpu">CPU</td><td id="meth-cpu">30%</td><td>Tier-based by model + core count & frequency boost</td></tr>
+                            <tr><td class="c-gpu">GPU</td><td id="meth-gpu">30%</td><td>Tier-based by model + VRAM boost</td></tr>
+                            <tr><td class="c-ram">RAM</td><td id="meth-ram">15%</td><td>Log-scaled capacity + DDR5 bonus</td></tr>
+                            <tr><td class="c-display">Display</td><td id="meth-display">15%</td><td>Panel type + resolution + refresh rate</td></tr>
+                            <tr><td class="c-storage">Storage</td><td id="meth-storage">10%</td><td>Log-scaled SSD capacity</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="meth-note">Value (P/P) = Performance Score ÷ Price (Millions Rials). Higher = better value.</p>
+                </div>
+            </details>
+
+            <!-- Table -->
+            <div class="table-wrapper">
+                <div class="table-toolbar">
+                    <div class="toolbar-left">
+                        <h3 id="table-title">Laptop Rankings</h3>
+                        <span class="page-info" id="page-info"></span>
+                    </div>
+                    <div class="toolbar-right">
+                        <label class="rows-select">
+                            <span>Rows:</span>
+                            <select id="rows-per-page">
+                                <option value="25">25</option>
+                                <option value="50" selected>50</option>
+                                <option value="100">100</option>
+                                <option value="9999">All</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                <div class="table-scroll">
+                    <table class="data-table" id="data-table">
+                        <thead>
+                            <tr>
+                                <th class="th-rank">#</th>
+                                <th class="th-img"></th>
+                                <th class="th-name sortable" data-key="title">Model</th>
+                                <th class="th-spec sortable" data-key="cpu_model">CPU</th>
+                                <th class="th-spec sortable" data-key="gpu_model">GPU</th>
+                                <th class="th-num sortable" data-key="ram_gb">RAM</th>
+                                <th class="th-num sortable" data-key="ssd_gb">SSD</th>
+                                <th class="th-num sortable active-sort sort-desc" data-key="perf_score">Score</th>
+                                <th class="th-num sortable" data-key="price_m">Price (M)</th>
+                                <th class="th-num sortable" data-key="ppr">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body">
+                            <tr><td colspan="10" class="loading-cell"><div class="spinner"></div><span>Loading data…</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination" id="pagination"></div>
+            </div>
+
+            <!-- Detail Modal -->
+            <div class="modal-overlay" id="modal-overlay">
+                <div class="modal" id="detail-modal">
+                    <button class="modal-close" id="modal-close">&times;</button>
+                    <div class="modal-content" id="modal-content"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
