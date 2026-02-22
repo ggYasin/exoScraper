@@ -542,7 +542,7 @@ select { cursor: pointer; }
   align-items: center;
   justify-content: center;
   transition: background var(--transition);
-  z-index: 10;
+  z-index: 20;
 }
 .modal-close:hover { background: var(--red); color: #fff; }
 .modal-content { padding: 28px; }
@@ -587,6 +587,63 @@ select { cursor: pointer; }
   margin-bottom: 16px;
 }
 
+/* ─── Config Modal ─── */
+.config-modal { max-width: 600px; display: flex; flex-direction: column; max-height: 80vh; }
+.config-header { padding: 24px 28px 0; border-bottom: 1px solid var(--border); background: var(--bg-1); position: sticky; top: 0; z-index: 10; }
+.config-header h2 { font-size: 18px; margin-bottom: 16px; color: var(--text-0); }
+
+.config-tabs { display: flex; gap: 20px; border-bottom: 2px solid transparent; }
+.tab-btn {
+  background: none; border: none; font-size: 13px; font-weight: 600; color: var(--text-2);
+  padding-bottom: 12px; cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s;
+}
+.tab-btn:hover { color: var(--text-0); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.config-toolbar { display: flex; gap: 10px; margin: 16px 0; }
+.config-toolbar input { flex: 1; }
+
+.config-body { padding: 0 28px; flex: 1; overflow-y: auto; }
+.tier-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 0; border-bottom: 1px solid var(--border); gap: 10px;
+}
+.tier-name { font-size: 13px; color: var(--text-1); font-weight: 500; flex: 1; }
+.tier-input { width: 60px; text-align: center; font-weight: 700; color: var(--accent); }
+
+.config-footer { padding: 16px 28px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; background: var(--bg-2); }
+
+/* ─── Comparison ─── */
+.compare-bar {
+    position: fixed; bottom: 0; left: var(--sidebar-w); right: 0;
+    background: var(--bg-1); border-top: 1px solid var(--accent);
+    padding: 12px 24px; display: flex; justify-content: space-between; align-items: center;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.4);
+    transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 200;
+}
+.compare-bar.visible { transform: translateY(0); }
+.compare-info { font-weight: 600; color: var(--text-0); }
+.compare-actions { display: flex; gap: 10px; }
+
+.compare-modal { max-width: 900px; width: 95vw; }
+.compare-content { padding: 24px; overflow-x: auto; }
+.compare-grid { display: flex; gap: 1px; background: var(--border); border-radius: 8px; overflow: hidden; min-width: 600px; }
+.compare-col { flex: 1; min-width: 200px; background: var(--bg-1); display: flex; flex-direction: column; }
+.compare-header { padding: 20px; text-align: center; border-bottom: 1px solid var(--border); background: var(--bg-2); min-height: 140px; }
+.compare-thumb { width: 60px; height: 60px; object-fit: contain; margin: 0 auto 10px; border-radius: 5px; background: #fff; }
+.compare-title { font-size: 13px; font-weight: 700; line-height: 1.4; height: 36px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+
+.compare-row { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 12.5px; display: flex; justify-content: space-between; align-items: center; }
+.compare-row.label-row { background: var(--bg-3); font-weight: 700; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.5px; font-size: 11px; padding: 6px 14px; }
+.compare-val { font-weight: 500; color: var(--text-1); text-align: right; width: 100%; }
+.compare-val.highlight { color: var(--accent); font-weight: 700; }
+
+.th-check { width: 40px; text-align: center; padding: 0 !important; }
+.cell-check { text-align: center; padding: 0 !important; }
+.check-wrap { display: flex; align-items: center; justify-content: center; height: 100%; cursor: pointer; }
+.row-checkbox { width: 16px; height: 16px; cursor: pointer; accent-color: var(--accent); }
+
 /* ─── Responsive ─── */
 @media (max-width: 1024px) {
   .sidebar {
@@ -601,6 +658,7 @@ select { cursor: pointer; }
   .stats-bar { gap: 8px; }
   .stat-card { padding: 12px 14px; min-width: 100px; }
   .stat-value { font-size: 18px; }
+  .compare-bar { left: 0; }
 }
 @media (max-width: 640px) {
   .stats-bar { flex-direction: column; }

@@ -49,6 +49,9 @@
                     <strong id="weight-sum-val">100%</strong>
                 </div>
                 <button class="btn btn-sm btn-ghost" id="btn-reset-weights">Reset Defaults</button>
+                <div style="margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
+                    <button class="btn btn-sm btn-ghost" id="btn-config-tiers" style="width:100%">⚙️ Configure Tiers</button>
+                </div>
             </section>
 
             <!-- Filters -->
@@ -184,6 +187,7 @@
                     <table class="data-table" id="data-table">
                         <thead>
                             <tr>
+                                <th class="th-check"></th>
                                 <th class="th-rank">#</th>
                                 <th class="th-img"></th>
                                 <th class="th-name sortable" data-key="title">Model</th>
@@ -209,6 +213,53 @@
                 <div class="modal" id="detail-modal">
                     <button class="modal-close" id="modal-close">&times;</button>
                     <div class="modal-content" id="modal-content"></div>
+                </div>
+            </div>
+
+            <!-- Config Modal -->
+            <div class="modal-overlay" id="config-overlay">
+                <div class="modal config-modal" id="config-modal">
+                    <button class="modal-close" id="config-close">&times;</button>
+                    <div class="config-header">
+                        <h2>Configure Scoring Tiers</h2>
+                        <div class="config-tabs">
+                            <button class="tab-btn active" data-tab="cpu">CPU</button>
+                            <button class="tab-btn" data-tab="gpu">GPU</button>
+                            <button class="tab-btn" data-tab="panel">Display</button>
+                        </div>
+                        <div class="config-toolbar">
+                            <input type="text" id="config-search" placeholder="Search models…">
+                            <button class="btn btn-sm btn-ghost" id="btn-reset-tiers">Restore Defaults</button>
+                        </div>
+                    </div>
+                    <div class="config-body" id="config-list">
+                        <!-- Items rendered here -->
+                    </div>
+                    <div class="config-footer">
+                        <button class="btn btn-sm btn-ghost" id="config-cancel">Cancel</button>
+                        <button class="btn btn-sm" id="config-save" style="background:var(--accent);color:#fff">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comparison Bar -->
+            <div class="compare-bar" id="compare-bar">
+                <div class="compare-info">
+                    <span id="compare-count">0</span> laptops selected
+                </div>
+                <div class="compare-actions">
+                    <button class="btn btn-sm btn-ghost" id="compare-clear">Clear</button>
+                    <button class="btn btn-sm" id="compare-view" style="background:var(--accent);color:#fff">Compare vs</button>
+                </div>
+            </div>
+
+            <!-- Comparison Modal -->
+            <div class="modal-overlay" id="compare-overlay">
+                <div class="modal compare-modal" id="compare-modal">
+                    <button class="modal-close" id="compare-close">&times;</button>
+                    <div class="compare-content" id="compare-content">
+                        <!-- Comparison grid rendered here -->
+                    </div>
                 </div>
             </div>
         </main>
