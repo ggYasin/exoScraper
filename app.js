@@ -4,7 +4,7 @@
 
 // ─── Tier dictionaries (ported from analyze_laptops.py) ──────
 
-const CPU_TIERS = {
+const DEFAULT_CPU_TIERS = {
     // Intel Arrow Lake (Ultra)
     "Core Ultra 9 285HX": 98, "Core Ultra 9 275HX": 96,
     "Core Ultra 7 265HX": 85, "Core Ultra 7 255HX": 83,
@@ -43,7 +43,7 @@ const CPU_TIERS = {
     "M2 Pro": 75, "M2": 60, "M2 Max": 85,
 };
 
-const GPU_TIERS = {
+const DEFAULT_GPU_TIERS = {
     // NVIDIA RTX 50-series
     "RTX 5090": 100, "RTX 5080": 90, "RTX 5070 Ti": 83,
     "RTX 5070": 78, "RTX 5060": 68, "RTX 5050": 58,
@@ -71,7 +71,7 @@ const GPU_TIERS = {
     "Radeon Graphics": 10,
 };
 
-const PANEL_SCORES = {
+const DEFAULT_PANEL_SCORES = {
     "OLED": 100, "Mini LED": 90,
     "Liquid Retina XDR": 92, "Liquid Retina IPS": 70,
     "Retina IPS": 68, "IPS": 60, "TN": 30,
@@ -97,9 +97,10 @@ function escHtml(s) {
 function scoreCPU(row) {
     const model = row.cpu_model || '';
     const specs = row.full_specs || {};
-    let base = CPU_TIERS[model];
+    const tiers = state.tiers.cpu;
+    let base = tiers[model];
     if (base === undefined) {
-        for (const [k, v] of Object.entries(CPU_TIERS)) {
+        for (const [k, v] of Object.entries(tiers)) {
             if (model.includes(k) || k.includes(model)) { base = v; break; }
         }
     }
@@ -128,9 +129,10 @@ function scoreCPU(row) {
 function scoreGPU(row) {
     const model = row.gpu_model || '';
     const specs = row.full_specs || {};
-    let base = GPU_TIERS[model];
+    const tiers = state.tiers.gpu;
+    let base = tiers[model];
     if (base === undefined) {
-        for (const [k, v] of Object.entries(GPU_TIERS)) {
+        for (const [k, v] of Object.entries(tiers)) {
             if (model.includes(k) || k.includes(model)) { base = v; break; }
         }
     }
@@ -177,7 +179,8 @@ function scoreStorage(row) {
 function scoreDisplay(row) {
     const specs = row.full_specs || {};
     const panel = specs['نوع پنل صفحه نمایش'] || 'IPS';
-    const panelScore = (PANEL_SCORES[panel] ?? 50) / 100 * 40;
+    const tiers = state.tiers.panel;
+    const panelScore = (tiers[panel] ?? 50) / 100 * 40;
 
     const resRaw = specs['حداکثر وضوح تصویر'] || '1920x1080';
     const resMatch = String(resRaw).match(/(\d+)\s*[xX×]\s*(\d+)/);
@@ -212,6 +215,8 @@ const state = {
     page: 1,
     perPage: 50,
     brands: [],
+    tiers: { cpu: {}, gpu: {}, panel: {} }, // Will be loaded from localStorage or defaults
+    selectedLaptops: new Set(),
 };
 
 // ─── DOM refs ───────────────────────────────────────────────
@@ -238,6 +243,31 @@ const dom = {
 // ─── Initialization ─────────────────────────────────────────
 
 async function init() {
+    // Load tiers from localStorage or use defaults
+    const savedTiers = localStorage.getItem('exo_tiers');
+    if (savedTiers) {
+        try {
+            state.tiers = JSON.parse(savedTiers);
+            // Validate and fallback if stored data is empty or corrupt
+            if (!state.tiers.cpu || Object.keys(state.tiers.cpu).length === 0) state.tiers.cpu = { ...DEFAULT_CPU_TIERS };
+            if (!state.tiers.gpu || Object.keys(state.tiers.gpu).length === 0) state.tiers.gpu = { ...DEFAULT_GPU_TIERS };
+            if (!state.tiers.panel || Object.keys(state.tiers.panel).length === 0) state.tiers.panel = { ...DEFAULT_PANEL_SCORES };
+        } catch (e) {
+            console.warn("Failed to load tiers from local storage, using defaults", e);
+            state.tiers = {
+                cpu: { ...DEFAULT_CPU_TIERS },
+                gpu: { ...DEFAULT_GPU_TIERS },
+                panel: { ...DEFAULT_PANEL_SCORES }
+            };
+        }
+    } else {
+        state.tiers = {
+            cpu: { ...DEFAULT_CPU_TIERS },
+            gpu: { ...DEFAULT_GPU_TIERS },
+            panel: { ...DEFAULT_PANEL_SCORES }
+        };
+    }
+
     try {
         const resp = await fetch('laptops.json');
         if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
@@ -606,12 +636,262 @@ function bindEvents() {
     $('#sidebar-toggle').addEventListener('click', () => {
         dom.sidebar.classList.toggle('open');
     });
+
+    bindConfigEvents();
 }
 
 function updateWeightSum() {
     const sum = Math.round((state.weights.cpu + state.weights.gpu + state.weights.ram + state.weights.display + state.weights.storage) * 100);
     dom.weightSumVal.textContent = sum + '%';
     dom.weightSum.classList.toggle('invalid', sum !== 100);
+}
+
+// ─── Config UI Logic ────────────────────────────────────────
+
+let activeConfigTab = 'cpu';
+
+function bindConfigEvents() {
+    $('#btn-config-tiers').addEventListener('click', openConfigModal);
+    $('#config-close').addEventListener('click', closeConfigModal);
+    $('#config-cancel').addEventListener('click', closeConfigModal);
+    $('#config-save').addEventListener('click', saveConfig);
+    $('#config-overlay').addEventListener('click', (e) => {
+        if (e.target === $('#config-overlay')) closeConfigModal();
+    });
+
+    $$('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            $$('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeConfigTab = btn.dataset.tab;
+            renderConfigList();
+        });
+    });
+
+    $('#config-search').addEventListener('input', () => renderConfigList());
+    $('#btn-reset-tiers').addEventListener('click', restoreDefaultTiers);
+}
+
+function closeConfigModal() {
+    $('#config-overlay').classList.remove('open');
+}
+
+// We need a draft state for the config modal so we can cancel changes.
+let draftTiers = null;
+
+function openConfigModal() {
+    // Deep copy current state.tiers
+    draftTiers = JSON.parse(JSON.stringify(state.tiers));
+
+    activeConfigTab = 'cpu';
+    $$('.tab-btn').forEach(b => b.classList.remove('active'));
+    $('.tab-btn[data-tab="cpu"]').classList.add('active');
+    $('#config-search').value = '';
+    renderConfigList();
+    $('#config-overlay').classList.add('open');
+}
+
+function renderConfigList() {
+    const container = $('#config-list');
+    container.innerHTML = '';
+    const filter = ($('#config-search').value || '').toLowerCase();
+
+    let sourceData = {};
+    if (activeConfigTab === 'cpu') sourceData = draftTiers.cpu;
+    else if (activeConfigTab === 'gpu') sourceData = draftTiers.gpu;
+    else if (activeConfigTab === 'panel') sourceData = draftTiers.panel;
+
+    const entries = Object.entries(sourceData).sort((a, b) => {
+        if (b[1] !== a[1]) return b[1] - a[1];
+        return a[0].localeCompare(b[0]);
+    });
+
+    entries.forEach(([name, score]) => {
+        if (filter && !name.toLowerCase().includes(filter)) return;
+
+        const row = document.createElement('div');
+        row.className = 'tier-item';
+        row.innerHTML = `
+            <span class="tier-name">${escHtml(name)}</span>
+            <input type="number" class="tier-input" value="${score}" min="0" max="100" data-key="${escHtml(name)}">
+        `;
+
+        // Bind input event to update draftTiers
+        const input = row.querySelector('input');
+        input.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value) || 0;
+            if (activeConfigTab === 'cpu') draftTiers.cpu[name] = val;
+            else if (activeConfigTab === 'gpu') draftTiers.gpu[name] = val;
+            else if (activeConfigTab === 'panel') draftTiers.panel[name] = val;
+        });
+
+        container.appendChild(row);
+    });
+}
+
+function saveConfig() {
+    state.tiers = JSON.parse(JSON.stringify(draftTiers));
+    localStorage.setItem('exo_tiers', JSON.stringify(state.tiers));
+    recalculate();
+    closeConfigModal();
+}
+
+function restoreDefaultTiers() {
+    if (!confirm('Are you sure you want to reset all scores to default?')) return;
+    draftTiers = {
+        cpu: { ...DEFAULT_CPU_TIERS },
+        gpu: { ...DEFAULT_GPU_TIERS },
+        panel: { ...DEFAULT_PANEL_SCORES }
+    };
+    renderConfigList();
+}
+
+// ─── Comparison Logic ───────────────────────────────────────
+
+function toggleSelection(idx, checked) {
+    if (checked) {
+        if (state.selectedLaptops.size >= 3) {
+            alert('You can compare max 3 laptops.');
+            // Revert checkbox (UI update happens in render but event is fired)
+            const cb = $(`tr[data-idx="${idx}"] .row-checkbox`);
+            if (cb) cb.checked = false;
+            return;
+        }
+        state.selectedLaptops.add(idx);
+    } else {
+        state.selectedLaptops.delete(idx);
+    }
+
+    // Highlight row
+    const row = $(`tr[data-idx="${idx}"]`);
+    if (row) {
+        if (checked) row.classList.add('selected-row');
+        else row.classList.remove('selected-row');
+    }
+
+    updateComparisonBar();
+}
+
+function clearSelection() {
+    state.selectedLaptops.clear();
+    // Uncheck all
+    $$('.row-checkbox').forEach(cb => {
+        cb.checked = false;
+        cb.closest('tr').classList.remove('selected-row');
+    });
+    updateComparisonBar();
+}
+
+function updateComparisonBar() {
+    const count = state.selectedLaptops.size;
+    $('#compare-count').textContent = count;
+    const bar = $('#compare-bar');
+    if (count > 0) bar.classList.add('visible');
+    else bar.classList.remove('visible');
+}
+
+function openComparisonModal() {
+    if (state.selectedLaptops.size < 2) {
+        alert('Please select at least 2 laptops to compare.');
+        return;
+    }
+
+    const container = $('#compare-content');
+    container.innerHTML = '';
+
+    const laptops = Array.from(state.selectedLaptops).map(idx => state.processed[idx]);
+
+    // Define rows to compare
+    const rows = [
+        { label: 'Overall Score', key: 'perf_score', highlight: true },
+        { label: 'Price (M)', key: 'price_m', highlight: true },
+        { label: 'Value (P/P)', key: 'ppr', highlight: true },
+        { label: 'CPU Score', key: '_cpu' },
+        { label: 'GPU Score', key: '_gpu' },
+
+        { label: 'Core Specs', type: 'label' },
+        { label: 'CPU Model', key: 'cpu_model' },
+        { label: 'Cores', key: 'cpu_core_count' },
+        { label: 'GPU Model', key: 'gpu_model' },
+        { label: 'RAM', key: 'ram' },
+        { label: 'Storage', key: 'ssd' },
+
+        { label: 'Display & Build', type: 'label' },
+        { label: 'Display Size', key: 'screen_size' },
+        { label: 'Resolution', key: 'full_specs', sub: 'حداکثر وضوح تصویر' },
+        { label: 'Refresh Rate', key: 'full_specs', sub: 'نرخ به روزرسانی تصویر' },
+        { label: 'Weight', key: 'weight' },
+    ];
+
+    // Build grid
+    const grid = document.createElement('div');
+    grid.className = 'compare-grid';
+
+    // Header Column (Labels)
+    const labelCol = document.createElement('div');
+    labelCol.className = 'compare-col';
+    labelCol.style.minWidth = '140px';
+    labelCol.style.flex = '0 0 140px';
+    labelCol.style.background = 'var(--bg-2)';
+
+    let labelHtml = `<div class="compare-header" style="display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--text-2)">METRIC</div>`;
+    rows.forEach(r => {
+        if (r.type === 'label') {
+            labelHtml += `<div class="compare-row label-row" style="justify-content:center">${escHtml(r.label)}</div>`;
+        } else {
+            labelHtml += `<div class="compare-row" style="color:var(--text-3);font-weight:600">${escHtml(r.label)}</div>`;
+        }
+    });
+    labelCol.innerHTML = labelHtml;
+    grid.appendChild(labelCol);
+
+    // Laptop Columns
+    laptops.forEach(lap => {
+        const col = document.createElement('div');
+        col.className = 'compare-col';
+
+        // Header
+        const imgHtml = lap.image_url ? `<img class="compare-thumb" src="${escHtml(lap.image_url)}">` : `<div class="compare-thumb" style="display:flex;align-items:center;justify-content:center;font-size:24px">💻</div>`;
+
+        let colHtml = `
+            <div class="compare-header">
+                ${imgHtml}
+                <div class="compare-title">${escHtml(lap.title || lap.model_code)}</div>
+                <div style="margin-top:8px">
+                    <a href="https://exo.ir/product/${escHtml(lap.slug)}" target="_blank" class="btn btn-sm btn-ghost" style="font-size:11px">View</a>
+                </div>
+            </div>
+        `;
+
+        rows.forEach(r => {
+            if (r.type === 'label') {
+                colHtml += `<div class="compare-row label-row">&nbsp;</div>`;
+                return;
+            }
+
+            let val = '';
+            if (r.sub && lap[r.key]) {
+                val = lap[r.key][r.sub];
+            } else {
+                val = lap[r.key];
+            }
+
+            if (val === undefined || val === null) val = '—';
+
+            const hlClass = r.highlight ? 'highlight' : '';
+            colHtml += `
+                <div class="compare-row" style="justify-content:center">
+                    <span class="compare-val ${hlClass}" style="text-align:center">${escHtml(val)}</span>
+                </div>
+            `;
+        });
+
+        col.innerHTML = colHtml;
+        grid.appendChild(col);
+    });
+
+    container.appendChild(grid);
+    $('#compare-overlay').classList.add('open');
 }
 
 // ─── Boot ───────────────────────────────────────────────────
